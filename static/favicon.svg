@@ -1,0 +1,21 @@
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .logo-main { fill: #ff5b18; }
+      .logo-accent { fill: #4d090d; }
+      .logo-white { fill: #ffffff; }
+    </style>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="16" cy="16" r="16" fill="#ff5b18"/>
+  
+  <!-- Main logo shape (simplified for small size) -->
+  <path class="logo-main" d="M8 8h16v16H8z"/>
+  
+  <!-- Accent elements -->
+  <rect class="logo-accent" x="10" y="10" width="4" height="4" rx="1"/>
+  <rect class="logo-accent" x="18" y="10" width="4" height="4" rx="1"/>
+  <rect class="logo-accent" x="10" y="18" width="4" height="4" rx="1"/>
+  <rect class="logo-accent" x="18" y="18" width="4" height="4" rx="1"/>
+</svg>

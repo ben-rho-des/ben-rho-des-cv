@@ -1,0 +1,10 @@
+/* 2049 Variable (user will supply actual files in /static/fonts) */
+@font-face{
+  font-family:"2049";
+  src:
+    url("/fonts/2049-Variable.woff2") format("woff2-variations"),
+    url("/fonts/2049-Regular.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
