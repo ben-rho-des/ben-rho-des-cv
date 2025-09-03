@@ -14,14 +14,14 @@
 	];
 	
 	const imageOptions = [
-		'/cah.png',
-		'/lah.png', 
-		'/rah.png',
-		'/tah.png',
-    '/tee.png',
-    '/mah.png',
-    '/meh.png',
-    '/owe.png'
+		'cah.png',
+		'lah.png', 
+		'rah.png',
+		'tah.png',
+    'tee.png',
+    'mah.png',
+    'meh.png',
+    'owe.png'
 	];
 	
 	let mode = 'loop';
@@ -141,7 +141,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: url('/bg-tile.png');
+      background: url('bg-tile.png');
       z-index: 2;
       mix-blend-mode: multiply;
       opacity: .6;
