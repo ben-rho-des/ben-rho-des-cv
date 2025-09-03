@@ -3,7 +3,6 @@
 </script>
 
 <div class="grid grid-cols-6 gap-x-5">
-
   <h1 class="display-font text-8xl font-bold mb-4 uppercase">Playlists 🥁</h1>
   <p class="col-span-6 text-lg text-gray-600 mb-8">Music that fuels my coding sessions and creative moments.</p>
   <div class="col-span-2">

@@ -24,7 +24,7 @@ const config = {
 			handleUnseenRoutes: 'warn'
 		},
 		paths: {
-			base: '/ben-rho-des-cv'
+			base: process.env.NODE_ENV === 'production' ? '/ben-rho-des-cv' : ''
 		}
 	},
 
