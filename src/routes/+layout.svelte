@@ -14,6 +14,6 @@
   <Grid />
   <slot />
 </main>
-{#if $page.url.pathname !== '/'}
-  <footer class="container w-300 text-center">© {new Date().getFullYear()} Ben-Rho-des</footer>
-{/if}
+
+<footer class="container w-300 text-center">© {new Date().getFullYear()} Ben-Rho-des</footer>
+

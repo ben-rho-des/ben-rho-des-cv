@@ -5,10 +5,11 @@
 @custom-variant dark (&:where(.mode-🌚, .mode-🌚 *));
 
 :root{
+  --fg: rgb(77,9,13);
   --bg:#f0f4f9;
+  --hero-text-color: #f0f4f9;
   --header-bg: rgba(240, 244, 249, 0.7);
   --header-scrolled-stroke: rgba(0, 0, 0, 0.1);
-  --fg: rgb(77,9,13);
   --primary:#EC6733;
   --primary-muted:#a0522d;
   --secondary:#200DF7;
@@ -54,17 +55,18 @@
 
 /* Theme switching */
 body.mode-🌚 {
+  --fg: #f0f0f0;
   --bg: #2c1810;
+  --hero-text-color: rgb(77,9,13);
   --header-bg: rgba(44, 24, 16, 0.7);
   --header-scrolled-stroke: rgba(255, 255, 255, 0.1);
-  --fg: #f0f0f0;
   --primary: rgb(255,92,24);
   --primary-muted: #ff8c5a;
   --border: #333;
 }
 
 .hero-font  {
-  color: var(--bg);
+  color: var(--hero-text-color);
 }
 
 *{box-sizing:border-box}

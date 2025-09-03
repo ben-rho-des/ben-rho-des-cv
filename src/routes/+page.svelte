@@ -25,7 +25,7 @@
 	];
 	
 	let mode = 'loop';
-	let segments = 6;
+	let segments = 8;
 	let scaleFactor = 1;
 	let motionFactor = 1;
 	let opacity = 1;
@@ -82,7 +82,7 @@
 </script>
 
 <svelte:head>
-	<title>Kaleidoscope Demo</title>
+	<title>Ben-rho-des cv website</title>
 </svelte:head>
 
 <div class="flex justify-center items-center flex-col">

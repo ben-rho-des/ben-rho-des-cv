@@ -1,10 +1,11 @@
-<script lang="ts"></script>
+<script lang="ts">
+  import PageTitle from '$lib/components/PageTitle.svelte';
+</script>
 
 <div class="grid grid-cols-6 gap-x-5">
-  <div class="col-span-6 flex flex-row justify-between">
-    <h1 class="display-font text-8xl font-bold mb-4 uppercase">Curriculum Vitae</h1>
-    <a class="bubble display-font-alt uppercase text-2xl self-center" target="_blank" rel="noopener" href="ben-rho-des-cv-2025.pdf">Download</a>
-  </div>
+  <PageTitle title="Curriculum Vitae">
+    <a class="bubble display-font-alt uppercase text-2xl self-center" target="_blank" rel="noopener" href="ben-rho-des-cv-2025.pdf">Download pdf</a>
+  </PageTitle>
 
   <section class="col-span-6">
     <h2 class="text-2xl font-semibold mb-4 text-primary">About</h2>
