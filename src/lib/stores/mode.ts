@@ -97,10 +97,15 @@ function applyToBody(state: ModeState) {
   const body = document.body;
   
   // Remove all mode classes
-  body.classList.remove('mode-🌞', 'mode-🌚', 'mode-🫥');
+  body.classList.remove('mode-🌞', 'mode-🌚', 'mode-🫥', 'dark');
   
   // Add current theme
   body.classList.add(`mode-${state.theme}`);
+  
+  // Add dark class for Tailwind dark mode when in dark theme
+  if (state.theme === '🌚') {
+    body.classList.add('mode-🌚');
+  }
   
   // Add grid mode if enabled
   if (state.grid) {

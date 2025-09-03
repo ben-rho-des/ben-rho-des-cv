@@ -86,13 +86,13 @@
 </svelte:head>
 
 <div class="flex justify-center items-center flex-col">
-<h1 class="display-font text-20xl text-center uppercase" data-text={selectedTitle}>{selectedTitle}</h1>
+<h1 class="hero-font display-font text-20xl text-center uppercase" data-text={selectedTitle}>{selectedTitle}</h1>
 <div class="display-font-alt bubble text-center text-3xl uppercase">gl+hf</div>
 </div>
-<div class="demo-container">
+<div class="fixed top-0 left-0 w-screen h-screen m-0 p-0 font-sans overflow-hidden -z-10">
 	
 	
-	<div class="kaleidoscope-demo">
+	<div class="w-screen h-screen overflow-hidden relative">
 		<Kaleidoscope 
 			{imageSrc}
 			{mode}
@@ -105,89 +105,36 @@
 	</div>
 </div>
 	{#if showControls}
-		<div class="controls">
-			<div class="control-group">
-				<label for="segments">Segments: {segments}</label>
-				<input type="range" id="segments" bind:value={segments} min="3" max="12" step="1" />
+		<div class="absolute top-30 left-1/2 transform -translate-x-1/2 grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4 p-4 bg-[var(--bg)] rounded-lg backdrop-blur-md z-[100] max-w-4xl">
+			<div class="flex flex-col gap-2">
+				<label for="segments" class="font-medium text-[var(--fg)] text-sm">Segments: {segments}</label>
+				<input type="range" id="segments" bind:value={segments} min="3" max="12" step="1" class="w-full accent-[var(--primary)]" />
 			</div>
 			
-			<div class="control-group">
-				<label for="scaleFactor">Scale Factor: {scaleFactor}</label>
-				<input type="range" id="scaleFactor" bind:value={scaleFactor} min="0.5" max="3" step="0.1" />
+			<div class="flex flex-col gap-2">
+				<label for="scaleFactor" class="font-medium text-[var(--fg)] text-sm">Scale Factor: {scaleFactor}</label>
+				<input type="range" id="scaleFactor" bind:value={scaleFactor} min="0.5" max="3" step="0.1" class="w-full accent-[var(--primary)]" />
 			</div>
 			
-			<div class="control-group">
-				<label for="motionFactor">Motion Factor: {motionFactor}</label>
-				<input type="range" id="motionFactor" bind:value={motionFactor} min="0" max="2" step="0.1" />
+			<div class="flex flex-col gap-2">
+				<label for="motionFactor" class="font-medium text-[var(--fg)] text-sm">Motion Factor: {motionFactor}</label>
+				<input type="range" id="motionFactor" bind:value={motionFactor} min="0" max="2" step="0.1" class="w-full accent-[var(--primary)]" />
 			</div>
 			
-			<div class="control-group">
-				<label for="opacity">Opacity: {opacity}</label>
-				<input type="range" id="opacity" bind:value={opacity} min="0" max="1" step="0.1" />
+			<div class="flex flex-col gap-2">
+				<label for="opacity" class="font-medium text-[var(--fg)] text-sm">Opacity: {opacity}</label>
+				<input type="range" id="opacity" bind:value={opacity} min="0" max="1" step="0.1" class="w-full accent-[var(--primary)]" />
 			</div>
 			
-			<div class="control-group">
-				<label for="imageAspect">Image Aspect: {$imageAspect.toFixed(1)}</label>
-				<input type="range" id="imageAspect" bind:value={$imageAspect} min="0.5" max="2" step="0.1" />
+			<div class="flex flex-col gap-2">
+				<label for="imageAspect" class="font-medium text-[var(--fg)] text-sm">Image Aspect: {$imageAspect.toFixed(1)}</label>
+				<input type="range" id="imageAspect" bind:value={$imageAspect} min="0.5" max="2" step="0.1" class="w-full accent-[var(--primary)]" />
 			</div>
 		</div>
 	{/if}
 
 <style>
-	.demo-container {
-		position: fixed;
-		top: 0;
-		left: 0;
-		width: 100vw;
-		height: 100vh;
-		margin: 0;
-		padding: 0;
-		font-family: system-ui, sans-serif;
-		overflow: hidden;
-    z-index: -1;
-	}
-	
-	.controls {
-		position: absolute;
-		top: 120px;
-		left: 50%;
-		transform: translateX(-50%);
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-		gap: 1rem;
-		padding: 1rem;
-		background: var(--bg);
-		border-radius: 8px;
-		backdrop-filter: blur(10px);
-		z-index: 100;
-		max-width: 800px;
-	}
-	
-	.control-group {
-		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
-	}
-	
-	.control-group label {
-		font-weight: 500;
-		color: var(--fg);
-		font-size: 14px;
-	}
-	
-	.control-group input[type="range"] {
-		width: 100%;
-    accent-color: var(--primary);
-	}
-	
-	.kaleidoscope-demo {
-		width: 100vw;
-		height: 100vh;
-		overflow: hidden;
-		position: relative;
-	}
-
-  .demo-container:before {
+  .fixed:before {
       content: '';
       position: absolute;
       top: 0;
@@ -199,5 +146,4 @@
       mix-blend-mode: multiply;
       opacity: .6;
   }
- 
 </style>

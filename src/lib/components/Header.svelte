@@ -6,9 +6,9 @@
 
   const right = [
     { href: '/cv', label: 'Curriculum Vitae' },
-    { href: '/about',  label: 'About'  },
+    // { href: '/about',  label: 'About'  },
     // { href: '/blog',    label: 'Blog'    },
-    { href: '/contact', label: 'Contact' }
+    // { href: '/contact', label: 'Contact' }
   ];
 
   const currentPath = derived(page, ($p) => $p.url.pathname);
@@ -195,6 +195,11 @@
     gap: 1rem;
     justify-content: center;
     align-items: center;
+  }
+
+
+  .header a:focus {
+    outline: none;
   }
 
   .action-btn {

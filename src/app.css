@@ -1,6 +1,9 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/typography';
 
+/* Custom dark mode variant using mode-🌚 class */
+@custom-variant dark (&:where(.mode-🌚, .mode-🌚 *));
+
 /* OT2049 Font Family */
 @font-face {
   font-family: 'OT2049';
@@ -22,7 +25,7 @@
   --bg:#f0f4f9;
   --header-bg: rgba(240, 244, 249, 0.7);
   --header-scrolled-stroke: rgba(0, 0, 0, 0.1);
-  --fg:#2c1810;
+  --fg: rgb(77,9,13);
   --primary:#EC6733;
   --primary-muted:#a0522d;
   --secondary:#200DF7;
@@ -36,7 +39,7 @@
   /* Typography scale - based on 18px base (1.125rem) */
   --font-size-xs: 0.75rem;    /* 12px */
   --font-size-sm: 0.875rem;   /* 14px */
-  --font-size-base: 1.125rem; /* 18px - larger base */
+  --font-size-base: 1rem; /* 18px - larger base */
   --font-size-lg: 1.25rem;    /* 20px */
   --font-size-xl: 1.5rem;     /* 24px */
   --font-size-2xl: 1.875rem;  /* 30px */
@@ -58,6 +61,14 @@
   --line-height-loose: 2;
 }
 
+.text-primary {
+  color: var(--primary);
+}
+
+.text-secondary {
+  color: var(--secondary);
+}
+
 /* Theme switching */
 body.mode-🌚 {
   --bg: #2c1810;
@@ -69,9 +80,8 @@ body.mode-🌚 {
   --border: #333;
 }
 
-body.mode-🌞 {
-  --bg: #f0f4f9;
-  --fg: rgb(77,9,13);
+.hero-font  {
+  color: var(--bg);
 }
 
 *{box-sizing:border-box}
@@ -123,9 +133,9 @@ body{
 .bubble {
   padding: 40px; 
   min-width: 200px;
-  background: var(--bg);
+  background: var(--fg);
   display: inline-block;
-  color: var(--fg);
+  color: var(--bg);
   border-radius: 80px;
 }
 
