@@ -11,7 +11,13 @@ const config = {
 		],
 
 	kit: { 
-		adapter: adapter(),
+		adapter: adapter({
+			pages: 'build',
+			assets: 'build',
+			fallback: 'index.html',
+			precompress: false,
+			strict: true
+		}),
 		prerender: {
 			entries: ['*']
 		}
