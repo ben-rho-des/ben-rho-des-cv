@@ -19,7 +19,11 @@ const config = {
 			strict: true
 		}),
 		prerender: {
-			entries: ['*']
+			entries: ['*'],
+			handleHttpError: 'warn'
+		},
+		paths: {
+			base: '/ben-rho-des-cv'
 		}
 	},
 
