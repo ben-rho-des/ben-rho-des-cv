@@ -107,8 +107,8 @@
 
   <!-- Mobile menu overlay -->
   {#if isMobileMenuOpen}
-    <div class="mobile-menu-overlay" on:click={closeMobileMenu}>
-      <div class="mobile-menu-content" on:click|stopPropagation>
+    <div class="mobile-menu-overlay" on:click={closeMobileMenu} on:keydown={(e) => e.key === 'Escape' && closeMobileMenu()} role="button" tabindex="0" aria-label="Close mobile menu">
+      <div class="mobile-menu-content" on:click|stopPropagation on:keydown={(e) => e.key === 'Escape' && closeMobileMenu()} role="dialog" aria-modal="true" aria-label="Mobile navigation menu" tabindex="0">
         <!-- Mobile action buttons -->
         <div class="mobile-actions">
           <button class="action-btn" on:click={toggleTheme} aria-label="Toggle theme">
@@ -267,19 +267,7 @@
     color: white;
   }
 
-  /* Dark mode navigation adjustments */
-  body.mode-🌚 .nav a:hover {
-    background-color: rgba(0, 0, 0, 0.5);
-  }
-
-  body.mode-🌚 .nav a:active {
-    background-color: rgba(0, 0, 0, 1);
-  }
-
-  body.mode-🌚 .nav a.is-active-route {
-    background-color: var(--primary);
-    color: white;
-  }
+  /* Dark mode navigation adjustments - removed unused selectors */
 
   /* Mobile menu button */
   .mobile-menu-btn {
@@ -399,13 +387,5 @@
     }
   }
 
-  /* Dark mode adjustments for mobile */
-  body.mode-🌚 .mobile-menu-content {
-    background: var(--bg);
-    border: 1px solid var(--border);
-  }
-
-  body.mode-🌚 .mobile-nav a:hover {
-    background-color: rgba(0, 0, 0, 0.2);
-  }
+  /* Dark mode adjustments for mobile - removed unused selectors */
 </style>

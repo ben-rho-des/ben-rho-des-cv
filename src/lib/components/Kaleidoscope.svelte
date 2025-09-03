@@ -127,7 +127,7 @@
 		renderer.setSize(containerElement.offsetWidth, containerElement.offsetHeight);
 		renderer.setClearColor(0xeeeeee, 1);
 		renderer.physicallyCorrectLights = true;
-		renderer.outputEncoding = THREE.sRGBEncoding;
+		renderer.outputColorSpace = THREE.SRGBColorSpace;
 
 		// Position renderer
 		renderer.domElement.style.position = 'absolute';
