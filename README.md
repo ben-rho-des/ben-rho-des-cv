@@ -1,6 +1,20 @@
-# sv
+# Ben Rhodes - CV Website
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+<div align="center">
+  <img src="static/brd.svg" alt="Ben Rhodes Logo" width="200" />
+</div>
+
+**Live Site:** [https://ben-rho-des.github.io/ben-rho-des-cv/](https://ben-rho-des.github.io/ben-rho-des-cv/)
+
+A modern, interactive CV website showcasing my full-stack development skills. Built with SvelteKit for performance and developer experience, featuring a Three.js-powered kaleidoscope on the homepage that demonstrates my ability to work with 3D graphics and WebGL.
+
+## Tech Stack
+
+- **SvelteKit** - Modern web framework with excellent developer experience
+- **Three.js** - 3D graphics library for the interactive kaleidoscope
+- **Tailwind CSS** - Utility-first CSS framework for rapid styling
+- **TypeScript** - Type safety and better developer experience
+- **GitHub Pages** - Static site hosting with automatic deployments
 
 ## Creating a project
 
@@ -35,4 +49,4 @@ npm run build
 
 You can preview the production build with `npm run preview`.
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+> To deploy the app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
