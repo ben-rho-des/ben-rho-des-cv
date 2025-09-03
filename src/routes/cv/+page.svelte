@@ -9,12 +9,12 @@
 
   <section class="col-span-6">
     <h2 class="text-2xl font-semibold mb-4 text-primary">About</h2>
-    <p class="text-lg text-gray-600 dark:text-gray-400 mb-4 text-secondary">Seeking my next opportunity as a full stack developer in a remote or hybrid role (1-2 days on site near Southern Cross).</p>
+    <p class="text-lg mb-4 text-secondary">Seeking my next opportunity as a full stack developer in a remote or hybrid role (1-2 days on site near Southern Cross).</p>
     <p class="mb-4">I'm proactive, self driven, love achieving goals and building for scale and long term success.</p>
     <p class="mb-6 italic">I ship accessible, performant UIs and sturdy back ends. 10+ years across media, healthtech & finance. I keep it typed, tested, and friendly.</p>
     <p class="mb-6">Deeper on the frontend side of things, but I have a strong understanding of the backend and data. It's important for me to be hands on in both.</p>
-    <p class="mb-4 ">You can check out my playground style github here 
-      <span class="hover:underline text-black dark:text-white "><a href="https://github.com/ben-rho-des" target="_blank" rel="noopener" >github.com/ben-rho-des</a></span>
+    <p class="mb-4">You can check out my playground style github here 
+      <span class="underline text-gray-600 dark:text-gray-400"><a href="https://github.com/ben-rho-des" target="_blank" rel="noopener" >github.com/ben-rho-des</a></span>
     </p>
     <div class="h-px bg-secondary opacity-25 mb-8"></div>
   </section>

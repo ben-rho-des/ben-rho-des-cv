@@ -17,7 +17,7 @@
     <li>Stay optimistic</li>
     <li>Have fun and bring light where I can</li>
     <li>Foster safe, supportive spaces</li>
-    <li>Care deeply about what i work on</li>
+    <li>Care deeply about what I work on</li>
   </ul>
 
   <p>That's me in a nutshell — coding, creating, cooking, and always curious about what's next.</p>
