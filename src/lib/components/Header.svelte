@@ -74,7 +74,7 @@
 
 <header class="header" class:scrolled={isScrolled} bind:this={header}>
   <div class="container header-inner">
-    <a class="logo" href="/" aria-label="Go to homepage">
+    <a class="logo" href="." aria-label="Go to homepage">
       <img src={$modeStore.theme === '🌚' ? 'brd-dark.svg' : 'brd.svg'} alt="Ben Logo" />
     </a>
 
