@@ -2,11 +2,12 @@
   import { page } from '$app/stores';
   import { derived } from 'svelte/store';
   import { onMount } from 'svelte';
+  import { modeStore } from '$lib/stores/mode';
 
   const right = [
     { href: '/cv', label: 'Curriculum Vitae' },
     { href: '/about',  label: 'About'  },
-    { href: '/blog',    label: 'Blog'    },
+    // { href: '/blog',    label: 'Blog'    },
     { href: '/contact', label: 'Contact' }
   ];
 
@@ -18,7 +19,6 @@
 
   let header: HTMLElement;
   let isScrolled = false;
-  let currentTheme = '🌞'; // Initial theme is light, button shows sun
   let isMobileMenuOpen = false;
 
   function handleScroll() {
@@ -26,27 +26,11 @@
   }
 
   function toggleTheme() {
-    const body = document.body;
-    if (body.classList.contains('mode-🌚')) {
-      body.classList.remove('mode-🌚');
-      body.classList.add('mode-🌞');
-      currentTheme = '🌞'; // After switching to light, button shows sun
-      localStorage.setItem('theme', '🌞');
-    } else {
-      body.classList.remove('mode-🌞');
-      body.classList.add('mode-🌚');
-      currentTheme = '🌞'; // After switching to dark, button shows moon
-      localStorage.setItem('theme', '🌚');
-    }
+    modeStore.toggleTheme();
   }
 
   function toggleGrid() {
-    const body = document.body;
-    if (body.classList.contains('mode-🫥')) {
-      body.classList.remove('mode-🫥');
-    } else {
-      body.classList.add('mode-🫥');
-    }
+    modeStore.toggleGrid();
   }
 
   function toggleMobileMenu() {
@@ -58,6 +42,9 @@
   }
 
   onMount(() => {
+    // Initialize mode store
+    modeStore.init();
+    
     // Simple scroll event listener
     const scrollHandler = () => {
       const scrollY = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop;
@@ -69,17 +56,6 @@
     document.addEventListener('scroll', scrollHandler, { passive: true, capture: true });
     document.documentElement.addEventListener('scroll', scrollHandler, { passive: true, capture: true });
     document.body.addEventListener('scroll', scrollHandler, { passive: true, capture: true });
-    
-    // Check localStorage for saved theme preference
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-      document.body.classList.add(`mode-${savedTheme}`);
-      currentTheme = savedTheme;
-    } else {
-      // Set initial theme if no preference saved
-      document.body.classList.add('mode-🌞');
-      currentTheme = '🌞';
-    }
 
     // Test initial scroll position
     scrollHandler();
@@ -97,7 +73,7 @@
   <div class="container header-inner">
     <!-- Logo in first column -->
     <a class="logo" href="/" aria-label="Go to homepage">
-      <img src={currentTheme === '🌚' ? '/brd-dark.svg' : '/brd.svg'} alt="Ben Logo" />
+      <img src={$modeStore.theme === '🌚' ? '/brd-dark.svg' : '/brd.svg'} alt="Ben Logo" />
     </a>
 
     <!-- Title in second column -->
@@ -106,7 +82,7 @@
     <!-- Action buttons in middle columns - hidden on mobile -->
     <div class="header-actions">
       <button class="action-btn" on:click={toggleTheme} aria-label="Toggle theme">
-        {currentTheme === '🌚' ? '🌞' : '🌚'}
+        {$modeStore.theme === '🌚' ? '🌞' : '🌚'}
       </button>
       <a href="/playlists" class="action-btn" aria-label="Go to playlists">
         🥁
@@ -136,7 +112,7 @@
         <!-- Mobile action buttons -->
         <div class="mobile-actions">
           <button class="action-btn" on:click={toggleTheme} aria-label="Toggle theme">
-            {currentTheme === '🌚' ? '🌞' : '🌚'}
+            {$modeStore.theme === '🌚' ? '🌞' : '🌚'}
           </button>
           <a href="/playlists" class="action-btn" aria-label="Go to playlists">
             🥁
@@ -165,24 +141,16 @@
     left: 0;
     right: 0;
     z-index: 50;
-    background: transparent;
+    background: var(--header-bg);
     transition: all 0.3s ease;
     padding-inline: var(--column-gap);
     width: 100%;
   }
 
-  /* Header scrolled state */
   .header.scrolled {
-    background: rgba(240, 244, 249, 0.95);
-    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 20px var(--header-scrolled-stroke);
   }
 
-  /* Dark mode scrolled state */
-  body.mode-🌚 .header.scrolled {
-    background: rgba(34, 34, 34, 0.95);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
-  }
 
   /* Header inner container */
   .header-inner {
@@ -232,7 +200,7 @@
   .action-btn {
     background: none;
     border: none;
-    font-size: 1.5rem;
+    font-size: 1.45rem;
     cursor: pointer;
     padding: 0.5rem;
     border-radius: 50%;

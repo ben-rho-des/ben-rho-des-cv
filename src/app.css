@@ -1,7 +1,27 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/typography';
+
+/* OT2049 Font Family */
+@font-face {
+  font-family: 'OT2049';
+  src: url('/fonts/OT2049-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'OT2049';
+  src: url('/fonts/OT2049-Black.otf') format('opentype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root{
   --bg:#f0f4f9;
+  --header-bg: rgba(240, 244, 249, 0.7);
+  --header-scrolled-stroke: rgba(0, 0, 0, 0.1);
   --fg:#2c1810;
   --primary:#EC6733;
   --primary-muted:#a0522d;
@@ -9,6 +29,9 @@
   --column-gap: 20px;
   --border: rgba(0, 0, 0, 0.1);
   --max-width: 1400px;
+  
+  /* Font families */
+  --display-font: 'OT2049', 'Space Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "JetBrains Mono", monospace;
   
   /* Typography scale - based on 18px base (1.125rem) */
   --font-size-xs: 0.75rem;    /* 12px */
@@ -21,13 +44,34 @@
   --font-size-4xl: 3rem;      /* 48px */
   --font-size-5xl: 3.75rem;   /* 60px */
   --font-size-6xl: 4.5rem;    /* 72px */
-  
+  --font-size-7xl: 5.25rem;   /* 84px */
+  --font-size-8xl: 6rem;      /* 96px */
+  --font-size-9xl: 6.75rem;   /* 108px */
+  --font-size-10xl: 7.5rem;   /* 120px */
+  --font-size-20xl: 15rem;   /* 240px */
+
   /* Line heights */
   --line-height-tight: 1.25;
   --line-height-snug: 1.375;
   --line-height-normal: 1.5;
   --line-height-relaxed: 1.625;
   --line-height-loose: 2;
+}
+
+/* Theme switching */
+body.mode-🌚 {
+  --bg: #2c1810;
+  --header-bg: rgba(44, 24, 16, 0.7);
+  --header-scrolled-stroke: rgba(255, 255, 255, 0.1);
+  --fg: #f0f0f0;
+  --primary: rgb(255,92,24);
+  --primary-muted: #ff8c5a;
+  --border: #333;
+}
+
+body.mode-🌞 {
+  --bg: #f0f4f9;
+  --fg: rgb(77,9,13);
 }
 
 *{box-sizing:border-box}
@@ -39,7 +83,7 @@ html {
 }
 body{
   margin:0;
-  padding: 200px var(--column-gap) 0;
+  padding: 100px var(--column-gap) 0;
   background:var(--bg);
   color:var(--fg);
   font-family:"Space Mono", "2049", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "JetBrains Mono", monospace;
@@ -60,6 +104,30 @@ body{
 .text-4xl { font-size: var(--font-size-4xl); }
 .text-5xl { font-size: var(--font-size-5xl); }
 .text-6xl { font-size: var(--font-size-6xl); }
+.text-7xl { font-size: var(--font-size-7xl); }
+.text-8xl { font-size: var(--font-size-8xl); }
+.text-9xl { font-size: var(--font-size-9xl); }
+.text-10xl { font-size: var(--font-size-10xl); }
+.text-20xl { font-size: var(--font-size-20xl); line-height: 230px;}
+
+.display-font {
+  font-family: var(--display-font);
+  font-weight: 900;
+}
+
+.display-font-alt {
+  font-family: var(--display-font);
+  font-weight: 400;
+}
+
+.bubble {
+  padding: 40px; 
+  min-width: 200px;
+  background: var(--bg);
+  display: inline-block;
+  color: var(--fg);
+  border-radius: 80px;
+}
 
 /* Heading styles */
 h1, h2, h3, h4, h5, h6 {
@@ -197,21 +265,10 @@ main{
 /* Main content spacing for fixed header */
 .main-content {
   padding-top: 80px; /* Adjust based on header height */
+  min-height: 80vh;
 }
 
-/* Theme switching */
-body.mode-🌚 {
-  --bg: #222;
-  --fg: #f0f0f0;
-  --primary: rgb(255,92,24);
-  --primary-muted: #ff8c5a;
-  --border: #333;
+footer{
+  border-top: 1px solid var(--fg);
+  padding: 24px 0;
 }
-
-body.mode-🌞 {
-  --bg: #f0f4f9;
-  --fg: rgb(77,9,13);
-}
-
-/* Simple footer placeholder */
-footer{border-top:1px solid var(--border);opacity:.8;padding:24px 0;}

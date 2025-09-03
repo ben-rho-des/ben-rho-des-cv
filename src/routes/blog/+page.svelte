@@ -4,92 +4,49 @@
   const posts = getBlogPosts();
 </script>
 
-<h1 class="w-800" style="font-size:clamp(28px,4vw,56px)">Blog</h1>
+<div class="grid grid-cols-6 gap-8 max-w-6xl mx-auto p-8">
+  <h1 class="col-span-6 text-5xl font-bold mb-8">Blog</h1>
 
-{#if posts.length > 0}
-  <div class="posts-grid">
+  {#if posts.length > 0}
     {#each posts as post}
-      <article class="post-card">
-        <h2 class="post-title w-700">
-          <a href="/blog/{post.slug}">{post.title}</a>
+      <article class="col-span-3 mb-8">
+        <h2 class="text-2xl font-semibold mb-3">
+          <a href="/blog/{post.slug}" class="text-primary hover:underline">{post.title}</a>
         </h2>
-        <time class="post-date w-400" datetime={post.date}>
+        <time class="block text-gray-600 text-sm mb-3" datetime={post.date}>
           {new Date(post.date).toLocaleDateString('en-US', { 
             year: 'numeric', 
             month: 'long', 
             day: 'numeric' 
           })}
         </time>
-        <p class="post-excerpt w-400">{post.excerpt}</p>
-        <div class="post-tags">
+        <p class="text-gray-700 mb-4 leading-relaxed">{post.excerpt}</p>
+        <div class="flex gap-2 flex-wrap">
           {#each post.tags as tag}
-            <span class="tag w-500">{tag}</span>
+            <span class="bg-primary text-white px-3 py-1 rounded-full text-sm">{tag}</span>
           {/each}
         </div>
       </article>
     {/each}
-  </div>
-{:else}
-  <p class="w-400">Posts coming soon.</p>
-{/if}
+  {:else}
+    <p class="col-span-6 text-gray-600">Posts coming soon.</p>
+  {/if}
+</div>
 
+<!-- Responsive styles -->
 <style>
-  .posts-grid {
-    display: grid;
-    gap: 2rem;
-    margin-top: 2rem;
-  }
-  
-  .post-card {
-    padding: 1.5rem;
-    border: 1px solid var(--primary);
-    border-radius: 8px;
-    background: rgba(255, 255, 255, 0.5);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-  
-  .post-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
-  
-  .post-title {
-    font-size: 1.5rem;
-    margin: 0 0 0.5rem 0;
-  }
-  
-  .post-title a {
-    color: var(--primary);
-    text-decoration: none;
-  }
-  
-  .post-title a:hover {
-    text-decoration: underline;
-  }
-  
-  .post-date {
-    display: block;
-    color: var(--primary-muted);
-    font-size: 0.9rem;
-    margin-bottom: 1rem;
-  }
-  
-  .post-excerpt {
-    margin: 0 0 1rem 0;
-    line-height: 1.6;
-  }
-  
-  .post-tags {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-  }
-  
-  .tag {
-    background: var(--primary);
-    color: white;
-    padding: 0.25rem 0.75rem;
-    border-radius: 20px;
-    font-size: 0.8rem;
+  @media (max-width: 860px) {
+    .grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+    
+    .col-span-3 {
+      grid-column: 1 / -1;
+    }
+    
+    .col-span-6 {
+      grid-column: 1 / -1;
+    }
   }
 </style>
