@@ -2,6 +2,7 @@
 
 <div align="center">
   <img src="static/brd.svg" alt="Ben Rhodes Logo" width="200" />
+  <br/><br/>
 </div>
 
 **Live Site:** [https://ben-rho-des.github.io/ben-rho-des-cv/](https://ben-rho-des.github.io/ben-rho-des-cv/)
