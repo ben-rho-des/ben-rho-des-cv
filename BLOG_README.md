@@ -1,19 +1,21 @@
 # Blog System Documentation
 
 ## Overview
+
 This SvelteKit site includes a blog system built with MDX (Markdown + JSX) that allows you to write posts in Markdown with frontmatter metadata.
 
 ## How to Add Blog Posts
 
 ### 1. Create a new post
+
 Create a new `.mdx` file in `src/routes/blog/posts/` with the following structure:
 
 ```mdx
 ---
-title: "Your Post Title"
-date: "2024-01-15"
-excerpt: "A brief description of your post"
-tags: ["tag1", "tag2", "tag3"]
+title: 'Your Post Title'
+date: '2024-01-15'
+excerpt: 'A brief description of your post'
+tags: ['tag1', 'tag2', 'tag3']
 ---
 
 # Your Post Content
@@ -21,22 +23,26 @@ tags: ["tag1", "tag2", "tag3"]
 Write your post content in Markdown here.
 
 ## You can use all standard Markdown features:
+
 - **Bold text**
-- *Italic text*
+- _Italic text_
 - [Links](https://example.com)
 - Code blocks
 - Lists
 - And more!
 
 ## You can also use Svelte components
+
 If you need interactive elements, you can import and use Svelte components directly in your MDX files.
 ```
 
 ### 2. File naming convention
+
 - Use kebab-case for filenames (e.g., `my-awesome-post.mdx`)
 - The filename becomes the URL slug (e.g., `/blog/my-awesome-post`)
 
 ### 3. Frontmatter fields
+
 - **title**: The post title (required)
 - **date**: Publication date in YYYY-MM-DD format (required)
 - **excerpt**: Brief description shown in the blog listing (required)
@@ -45,12 +51,14 @@ If you need interactive elements, you can import and use Svelte components direc
 ## Blog Features
 
 ### Automatic Features
+
 - Posts are automatically sorted by date (newest first)
 - Tags are displayed and can be used for filtering
 - Responsive design with hover effects
 - SEO-friendly URLs
 
 ### Styling
+
 - Posts use the Space Mono font for body text
 - Consistent with the site's design system
 - Responsive typography and spacing
@@ -65,19 +73,18 @@ If you need interactive elements, you can import and use Svelte components direc
 ## Advanced Usage
 
 ### Custom Components in Posts
+
 You can import and use Svelte components in your MDX files:
 
 ```mdx
 ---
-title: "Post with Components"
-date: "2024-01-15"
-excerpt: "Using Svelte components in MDX"
-tags: ["advanced", "components"]
+title: 'Post with Components'
+date: '2024-01-15'
+excerpt: 'Using Svelte components in MDX'
+tags: ['advanced', 'components']
 ---
 
-<script>
-  import MyComponent from '$lib/components/MyComponent.svelte';
-</script>
+<script>import MyComponent from '$lib/components/MyComponent.svelte';</script>
 
 # Post with Components
 
@@ -87,9 +94,11 @@ Regular markdown content continues here...
 ```
 
 ### Tag-based Filtering
+
 The blog system supports filtering posts by tags. You can extend the functionality by adding tag pages or filtering UI.
 
 ## File Structure
+
 ```
 src/
 ├── routes/
@@ -115,11 +124,13 @@ src/
 ## Troubleshooting
 
 ### Post not showing up?
+
 - Check that the frontmatter is properly formatted
 - Ensure the file is in the correct directory
 - Restart the dev server after adding new files
 
 ### Build errors?
+
 - Verify all MDX files have valid frontmatter
 - Check for syntax errors in your markdown
 - Ensure all imported components exist
@@ -127,6 +138,7 @@ src/
 ## Future Enhancements
 
 Potential improvements you could add:
+
 - Search functionality
 - Tag-based filtering
 - Related posts

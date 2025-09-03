@@ -1,24 +1,24 @@
 export interface BlogPost {
-  title: string;
-  date: string;
-  excerpt: string;
-  tags: string[];
-  slug: string;
-  content: string;
+	title: string;
+	date: string;
+	excerpt: string;
+	tags: string[];
+	slug: string;
+	content: string;
 }
 
 import blogPosts from './blog-posts.json';
 
 export function getBlogPosts(): BlogPost[] {
-  return blogPosts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+	return blogPosts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
 
 export function getBlogPost(slug: string): BlogPost | undefined {
-  const posts = getBlogPosts();
-  return posts.find(post => post.slug === slug);
+	const posts = getBlogPosts();
+	return posts.find((post) => post.slug === slug);
 }
 
 export function getPostsByTag(tag: string): BlogPost[] {
-  const posts = getBlogPosts();
-  return posts.filter(post => post.tags.includes(tag));
+	const posts = getBlogPosts();
+	return posts.filter((post) => post.tags.includes(tag));
 }

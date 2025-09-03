@@ -15,17 +15,17 @@ const title = args[0];
 const date = args[1] || new Date().toISOString().split('T')[0];
 
 if (!title) {
-  console.error('Usage: node create-post.js "Post Title" [YYYY-MM-DD]');
-  console.error('Example: node create-post.js "My Awesome Post" 2024-01-15');
-  process.exit(1);
+	console.error('Usage: node create-post.js "Post Title" [YYYY-MM-DD]');
+	console.error('Example: node create-post.js "My Awesome Post" 2024-01-15');
+	process.exit(1);
 }
 
 // Create slug from title
 const slug = title
-  .toLowerCase()
-  .replace(/[^a-z0-9\s-]/g, '')
-  .replace(/\s+/g, '-')
-  .trim();
+	.toLowerCase()
+	.replace(/[^a-z0-9\s-]/g, '')
+	.replace(/\s+/g, '-')
+	.trim();
 
 const filename = `${slug}.mdx`;
 const filepath = path.join(postsDir, filename);
@@ -61,22 +61,22 @@ Wrap up your thoughts.
 
 // Ensure posts directory exists
 if (!fs.existsSync(postsDir)) {
-  fs.mkdirSync(postsDir, { recursive: true });
+	fs.mkdirSync(postsDir, { recursive: true });
 }
 
 // Check if file already exists
 if (fs.existsSync(filepath)) {
-  console.error(`Error: Post "${filename}" already exists!`);
-  process.exit(1);
+	console.error(`Error: Post "${filename}" already exists!`);
+	process.exit(1);
 }
 
 // Write the file
 try {
-  fs.writeFileSync(filepath, content);
-  console.log(`✅ Created new blog post: ${filename}`);
-  console.log(`📝 Edit the file at: ${filepath}`);
-  console.log(`🌐 View at: http://localhost:5173/blog/${slug}`);
+	fs.writeFileSync(filepath, content);
+	console.log(`✅ Created new blog post: ${filename}`);
+	console.log(`📝 Edit the file at: ${filepath}`);
+	console.log(`🌐 View at: http://localhost:5173/blog/${slug}`);
 } catch (error) {
-  console.error('Error creating post:', error.message);
-  process.exit(1);
+	console.error('Error creating post:', error.message);
+	process.exit(1);
 }

@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
 	import { browser } from '$app/environment';
 	import * as THREE from 'three';
@@ -12,17 +12,17 @@
 	export let opacity = 1;
 	export let imageAspect = 1; // Image aspect ratio (width/height)
 
-	let containerElement;
-	let scene;
-	let camera;
-	let renderer;
-	let material;
-	let geometry;
-	let plane;
+	let containerElement: HTMLElement;
+	let scene: THREE.Scene;
+	let camera: THREE.OrthographicCamera;
+	let renderer: THREE.WebGLRenderer;
+	let material: THREE.ShaderMaterial;
+	let geometry: THREE.PlaneGeometry;
+	let plane: THREE.Mesh;
 	let mouse = { x: 0, y: 0 };
 	let isPlaying = true;
 	let lastTime = performance.now() / 1000;
-	let animationId;
+	let animationId: number;
 
 	// Vertex shader - handles vertex positions
 	const vertexShader = `
@@ -126,7 +126,7 @@
 		renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 		renderer.setSize(containerElement.offsetWidth, containerElement.offsetHeight);
 		renderer.setClearColor(0xeeeeee, 1);
-		renderer.physicallyCorrectLights = true;
+		// renderer.physicallyCorrectLights = true; // Not available in this Three.js version
 		renderer.outputColorSpace = THREE.SRGBColorSpace;
 
 		// Position renderer
@@ -135,6 +135,7 @@
 		renderer.domElement.style.left = '0';
 		renderer.domElement.style.zIndex = '1';
 
+		// eslint-disable-next-line svelte/no-dom-manipulating
 		containerElement.appendChild(renderer.domElement);
 
 		// Load texture with error handling
@@ -142,7 +143,7 @@
 		const texture = textureLoader.load(
 			imageSrc,
 			// onLoad callback
-			(texture) => {
+			(texture: THREE.Texture) => {
 				console.log('Texture loaded successfully');
 				texture.minFilter = THREE.LinearFilter;
 				texture.generateMipmaps = false;
@@ -152,16 +153,16 @@
 			// onProgress callback
 			undefined,
 			// onError callback
-			(error) => {
+			(error: unknown) => {
 				console.error('Error loading texture:', error);
 			}
 		);
 
 		// Create material with shaders
 		material = new THREE.ShaderMaterial({
-			extensions: {
-				derivatives: '#extension GL_OES_standard_derivatives : enable'
-			},
+			// extensions: {
+			// 	derivatives: '#extension GL_OES_standard_derivatives : enable'
+			// },
 			side: THREE.DoubleSide,
 			uniforms: {
 				resolution: { value: new THREE.Vector4() },
@@ -186,7 +187,11 @@
 		scene.add(plane);
 
 		console.log('Three.js scene initialized');
-		console.log('Container dimensions:', containerElement.offsetWidth, containerElement.offsetHeight);
+		console.log(
+			'Container dimensions:',
+			containerElement.offsetWidth,
+			containerElement.offsetHeight
+		);
 		console.log('Image source:', imageSrc);
 
 		// Initial resize
@@ -206,17 +211,17 @@
 		window.addEventListener('resize', handleResize);
 	}
 
-	function handleMouseMove(event) {
+	function handleMouseMove(event: MouseEvent) {
 		updateMousePosition(event.clientX, event.clientY);
 	}
 
-	function handleTouchMove(event) {
+	function handleTouchMove(event: TouchEvent) {
 		if (event.touches.length > 0) {
 			updateMousePosition(event.touches[0].clientX, event.touches[0].clientY);
 		}
 	}
 
-	function updateMousePosition(clientX, clientY) {
+	function updateMousePosition(clientX: number, clientY: number) {
 		const rect = containerElement.getBoundingClientRect();
 		mouse.x = (clientX - rect.left) / containerElement.offsetWidth;
 		mouse.y = (clientY - rect.top) / containerElement.offsetHeight;
@@ -240,7 +245,11 @@
 		const height = containerElement.offsetHeight;
 
 		renderer.setSize(width, height);
-		camera.aspect = width / height;
+		// Update orthographic camera bounds
+		camera.left = -width / height / 2;
+		camera.right = width / height / 2;
+		camera.top = 0.5;
+		camera.bottom = -0.5;
 		camera.updateProjectionMatrix();
 
 		// Calculate aspect ratio for shader
@@ -250,7 +259,7 @@
 			aspectY = 1;
 		} else {
 			aspectX = 1;
-			aspectY = (height / width) / 1;
+			aspectY = height / width / 1;
 		}
 
 		// Update shader uniforms
@@ -260,7 +269,7 @@
 		material.uniforms.resolution.value.w = aspectY;
 	}
 
-	function updateDataTexture(time) {
+	function updateDataTexture(time: number) {
 		time /= 1000;
 
 		if (mode === 'mouse') {
