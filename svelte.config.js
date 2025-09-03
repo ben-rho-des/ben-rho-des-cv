@@ -22,6 +22,9 @@ const config = {
 			entries: ['*'],
 			handleHttpError: 'warn',
 			handleUnseenRoutes: 'warn'
+		},
+		paths: {
+			base: '/ben-rho-des-cv'
 		}
 	},
 

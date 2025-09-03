@@ -5,10 +5,10 @@
   import { modeStore } from '$lib/stores/mode';
 
   const right = [
-    { href: 'cv', label: 'Curriculum Vitae' },
-    // { href: 'about',  label: 'About'  },
-    // { href: 'blog',    label: 'Blog'    },
-    // { href: 'contact', label: 'Contact' }
+    { href: '/cv', label: 'Curriculum Vitae' },
+    // { href: '/about',  label: 'About'  },
+    // { href: '/blog',    label: 'Blog'    },
+    // { href: '/contact', label: 'Contact' }
   ];
 
   const currentPath = derived(page, ($p) => $p.url.pathname);
@@ -74,20 +74,17 @@
 
 <header class="header" class:scrolled={isScrolled} bind:this={header}>
   <div class="container header-inner">
-    <!-- Logo in first column -->
-    <a class="logo" href="." aria-label="Go to homepage">
+    <a class="logo" href="/" aria-label="Go to homepage">
       <img src={$modeStore.theme === '🌚' ? '/brd-dark.svg' : '/brd.svg'} alt="Ben Logo" />
     </a>
 
-    <!-- Title in second column -->
     <h2 class="header-title w-400">Melbourne Based Fullstack Developer</h2>
 
-    <!-- Action buttons in middle columns - hidden on mobile -->
     <div class="header-actions">
       <button class="action-btn" on:click={toggleTheme} aria-label="Toggle theme">
         {$modeStore.theme === '🌚' ? '🌞' : '🌚'}
       </button>
-      <a href="playlists" class="action-btn" aria-label="Go to playlists">
+      <a href="/playlists" class="action-btn" aria-label="Go to playlists">
         🥁
       </a>
       <button class="action-btn" on:click={toggleGrid} aria-label="Toggle grid">
@@ -95,7 +92,6 @@
       </button>
     </div>
 
-    <!-- Navigation in last two columns -->
     <nav class="nav" aria-label="Primary navigation">
       {#each right as item}
         <a href={item.href} class:is-active-route={isActive(item.href, $currentPath)} on:click={closeMobileMenu}>{item.label}</a>
@@ -117,7 +113,7 @@
           <button class="action-btn" on:click={toggleTheme} aria-label="Toggle theme">
             {$modeStore.theme === '🌚' ? '🌞' : '🌚'}
           </button>
-          <a href="playlists" class="action-btn" aria-label="Go to playlists">
+          <a href="/playlists" class="action-btn" aria-label="Go to playlists">
             🥁
           </a>
           <button class="action-btn" on:click={toggleGrid} aria-label="Toggle grid">
@@ -137,7 +133,6 @@
 </header>
 
 <style>
-  /* Header base styles */
   .header {
     position: fixed;
     top: 0;
@@ -154,8 +149,6 @@
     box-shadow: 0 2px 20px var(--header-scrolled-stroke);
   }
 
-
-  /* Header inner container */
   .header-inner {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
@@ -164,7 +157,6 @@
     padding: 16px 0;
   }
 
-  /* Logo styles */
   .logo {
     grid-column: 1;
     font-size: clamp(24px, 4vw, 48px);
@@ -180,7 +172,6 @@
     transition: filter 0.2s ease;
   }
 
-  /* Header title */
   .header-title {
     grid-column: 2;
     font-size: clamp(14px, 1.4vw, 16px);
@@ -191,7 +182,6 @@
     width: auto;
   }
 
-  /* Header actions */
   .header-actions {
     grid-column: 3 / 4;
     display: flex;
@@ -199,7 +189,6 @@
     justify-content: center;
     align-items: center;
   }
-
 
   .header a:focus {
     outline: none;
@@ -233,7 +222,6 @@
     outline: none;
   }
 
-  /* Navigation */
   .nav {
     grid-column: 4 / 7;
     display: flex;
@@ -264,15 +252,11 @@
     outline: none;
   }
 
-  /* Active route styling */
   .nav a.is-active-route {
     background-color: var(--primary);
     color: white;
   }
 
-  /* Dark mode navigation adjustments - removed unused selectors */
-
-  /* Mobile menu button */
   .mobile-menu-btn {
     display: none;
     background: none;
@@ -303,7 +287,6 @@
     outline: none;
   }
 
-  /* Mobile menu overlay */
   .mobile-menu-overlay {
     position: fixed;
     top: 0;
@@ -360,7 +343,6 @@
     color: white;
   }
 
-  /* Responsive styles */
   @media (max-width: 1000px) {
     .action-btn {
       min-width: 2.5rem;
@@ -388,7 +370,5 @@
     .header-title {
       grid-column: 2 / 6;
     }
-  }
-
-  /* Dark mode adjustments for mobile - removed unused selectors */
+  } 
 </style>

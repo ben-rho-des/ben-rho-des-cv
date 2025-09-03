@@ -7,7 +7,6 @@ export interface BlogPost {
   content: string;
 }
 
-// Import blog posts from JSON file
 import blogPosts from './blog-posts.json';
 
 export function getBlogPosts(): BlogPost[] {

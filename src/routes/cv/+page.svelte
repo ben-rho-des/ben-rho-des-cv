@@ -6,7 +6,6 @@
     <a class="bubble display-font-alt uppercase text-2xl self-center" target="_blank" rel="noopener" href="ben-rho-des-cv-2025.pdf">Download</a>
   </div>
 
-  <!-- About Section -->
   <section class="col-span-6">
     <h2 class="text-2xl font-semibold mb-4 text-primary">About</h2>
     <p class="text-lg text-gray-600 dark:text-gray-400 mb-4 text-secondary">Seeking my next opportunity as a full stack developer in a remote or hybrid role (1-2 days on site near Southern Cross).</p>
@@ -19,7 +18,6 @@
     <div class="h-px bg-secondary opacity-25 mb-8"></div>
   </section>
 
-  <!-- Work Experience -->
   <section class="col-span-3">
     <h2 class="text-2xl font-semibold mb-6 text-primary">Work Experience</h2>
 
