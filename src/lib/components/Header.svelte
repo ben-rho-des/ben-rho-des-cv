@@ -5,10 +5,10 @@
   import { modeStore } from '$lib/stores/mode';
 
   const right = [
-    { href: '/cv', label: 'Curriculum Vitae' },
-    // { href: '/about',  label: 'About'  },
-    // { href: '/blog',    label: 'Blog'    },
-    // { href: '/contact', label: 'Contact' }
+    { href: 'cv', label: 'Curriculum Vitae' },
+    // { href: 'about',  label: 'About'  },
+    // { href: 'blog',    label: 'Blog'    },
+    // { href: 'contact', label: 'Contact' }
   ];
 
   const currentPath = derived(page, ($p) => $p.url.pathname);
@@ -84,7 +84,7 @@
       <button class="action-btn" on:click={toggleTheme} aria-label="Toggle theme">
         {$modeStore.theme === '🌚' ? '🌞' : '🌚'}
       </button>
-      <a href="/playlists" class="action-btn" aria-label="Go to playlists">
+      <a href="playlists" class="action-btn" aria-label="Go to playlists">
         🥁
       </a>
       <button class="action-btn" on:click={toggleGrid} aria-label="Toggle grid">
