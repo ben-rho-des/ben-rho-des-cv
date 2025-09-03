@@ -5,16 +5,19 @@
   import { modeStore } from '$lib/stores/mode';
 
   const right = [
-    { href: '/cv', label: 'Curriculum Vitae' },
-    // { href: '/about',  label: 'About'  },
-    // { href: '/blog',    label: 'Blog'    },
-    // { href: '/contact', label: 'Contact' }
+    { href: 'cv', label: 'Curriculum Vitae' },
+    // { href: 'about',  label: 'About'  },
+    // { href: 'blog',    label: 'Blog'    },
+    // { href: 'contact', label: 'Contact' }
   ];
 
   const currentPath = derived(page, ($p) => $p.url.pathname);
   const isActive = (path: string, current: string) => {
     if (typeof current !== 'string') return false;
-    return current === path;
+    // Handle relative paths by removing leading slash and comparing
+    const normalizedPath = path.startsWith('/') ? path.slice(1) : path;
+    const normalizedCurrent = current.startsWith('/') ? current.slice(1) : current;
+    return normalizedCurrent === normalizedPath || normalizedCurrent === `/${normalizedPath}`;
   };
 
   let header: HTMLElement;
@@ -72,7 +75,7 @@
 <header class="header" class:scrolled={isScrolled} bind:this={header}>
   <div class="container header-inner">
     <!-- Logo in first column -->
-    <a class="logo" href="/" aria-label="Go to homepage">
+    <a class="logo" href="." aria-label="Go to homepage">
       <img src={$modeStore.theme === '🌚' ? '/brd-dark.svg' : '/brd.svg'} alt="Ben Logo" />
     </a>
 
@@ -84,7 +87,7 @@
       <button class="action-btn" on:click={toggleTheme} aria-label="Toggle theme">
         {$modeStore.theme === '🌚' ? '🌞' : '🌚'}
       </button>
-      <a href="/playlists" class="action-btn" aria-label="Go to playlists">
+      <a href="playlists" class="action-btn" aria-label="Go to playlists">
         🥁
       </a>
       <button class="action-btn" on:click={toggleGrid} aria-label="Toggle grid">
@@ -114,7 +117,7 @@
           <button class="action-btn" on:click={toggleTheme} aria-label="Toggle theme">
             {$modeStore.theme === '🌚' ? '🌞' : '🌚'}
           </button>
-          <a href="/playlists" class="action-btn" aria-label="Go to playlists">
+          <a href="playlists" class="action-btn" aria-label="Go to playlists">
             🥁
           </a>
           <button class="action-btn" on:click={toggleGrid} aria-label="Toggle grid">
