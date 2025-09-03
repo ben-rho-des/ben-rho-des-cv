@@ -1,4 +1,5 @@
 <script lang="ts">
+  import PageTitle from '$lib/components/PageTitle.svelte';
   import { onMount } from 'svelte';
 
   // Form state
@@ -94,13 +95,11 @@
   });
 </script>
 
+
+
 <div class="grid grid-cols-6 gap-x-5">
-  <!-- Header -->
-  <div class="col-span-6 mb-12">
-    <h1 class="text-5xl font-bold text-primary">Let's build something a bit magical</h1>
-  </div>
+  <PageTitle title="Let's build something a bit magical" />
   
-  <!-- Left Column: Copy + Socials -->
   <div class="col-span-3">
     <div class="space-y-8">
       <div>
@@ -128,7 +127,6 @@
     </div>
   </div>
 
-  <!-- Right Column: Form -->
   <div class="col-span-3">
     <form 
       method="POST" 
@@ -238,10 +236,6 @@
     }
     
     .col-span-3 {
-      grid-column: 1 / -1;
-    }
-    
-    .col-span-6 {
       grid-column: 1 / -1;
     }
   }

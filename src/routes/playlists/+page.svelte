@@ -1,11 +1,9 @@
 <script lang="ts">
-  // Playlists page for music sharing
+  import PageTitle from '$lib/components/PageTitle.svelte';
 </script>
 
 <div class="grid grid-cols-6 gap-x-5">
-  <div class="col-span-6 flex flex-row justify-between">
-    <h1 class="display-font text-8xl font-bold mb-4 uppercase">Playlists 🥁</h1>
-  </div>
+  <PageTitle title="Playlists 🥁" />
   <p class="col-span-6 text-lg text-gray-600 mb-8">Magical music to code to</p>
   <div class="col-span-2">
     <h3 class="text-xl font-semibold mb-3 text-primary">Mix</h3>

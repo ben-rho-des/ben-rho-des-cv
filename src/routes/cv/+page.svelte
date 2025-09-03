@@ -80,57 +80,7 @@
    
   </section>
 
-  <!-- Right column: Skills / Education / Goals / Values -->
   <aside class="col-span-3">
-    <h2 class="text-2xl font-semibold mb-6 text-primary">Skills</h2>
-    <h3 class="text-secondary text-base font-semibold mb-2">Frontend</h3>
-    <ul class="space-y-2 mb-4">
-      <li>Accessible HTML · CSS (Sass/Less/Stylus, CSS-in-JS) · <strong>React</strong> · <strong>TypeScript</strong> · Next.js · Angular 1+ · <strong>Svelte</strong></li>
-    </ul>
-    <h3 class="text-secondary text-base font-semibold mb-2">Backend</h3>
-    <ul class="space-y-2 mb-4">
-      <li><strong>Node.js</strong> (Express/TSOA/Nuxt) · <strong>Python</strong> (FastAPI) · GraphQL · REST · Postgres</li>
-    </ul>
-    <h3 class="text-secondary text-base font-semibold mb-2">Cloud + Ops</h3>
-    <ul class="space-y-2 mb-4">
-      <li>AWS (EKS, S3, CloudFront, Lambda) · CI/CD (GitHub Actions) · Monorepos (Rush, Nx)</li>
-    </ul>
-    <h3 class="text-secondary text-base font-semibold mb-2">Test & Quality</h3>
-    <ul class="space-y-2 mb-6">
-      <li>Jest · Playwright · Cypress · React Testing Library · Protractor (legacy)</li>
-    </ul>
-
-    <div class="h-px bg-secondary opacity-25 mb-6"></div>
-
-    <h2 class="text-2xl font-semibold mb-6 text-primary">Goals</h2>
-    <ul class="space-y-2 mb-6">
-      <li>Solidify myself as a fullstack tech lead</li>
-      <li>Upskill in UI - It's been a while since I've done design, I want to get into it again</li>
-      <li>Continue growing into technical leadership while exploring opportunities to innovate and build products that make a difference</li>
-    </ul>
-
-    <div class="h-px bg-secondary opacity-25 mb-6"></div>
-
-    <h2 class="text-2xl font-semibold mb-6 text-primary">Values</h2>
-    <ol class="space-y-2 mb-6 list-decimal pl-8">
-      <li>Be myself</li>
-      <li>Be optimistic</li>
-      <li>Have fun and be an encouraging light in a dark world</li>
-      <li>Foster a safe environment & Help others</li>
-      <li>Care</li>
-    </ol>
-
-    <div class="h-px bg-secondary opacity-25 mb-6"></div>
-
-    <h2 class="text-2xl font-semibold mb-6 text-primary">Interests</h2>
-    <h3 class="text-secondary text-base font-semibold mb-2">DIY Projects</h3>
-    <p class="mb-4">I love renovation projects, currently making a home office/studio in a shipping container.</p>
-    
-    <h3 class="text-secondary text-base font-semibold mb-2">Strategy Collectable Games</h3>
-    <p class="mb-6">Magic the Gathering, Hearthstone and Marvel Snap - I love learning about the meta, and the different strategies and playstyles. It keeps me on my toes and helps me think creatively in a non-stressful environment.</p>
-
-    <div class="h-px bg-secondary opacity-25 mb-6"></div>
-
     <h2 class="text-2xl font-semibold mb-6 text-primary">Education & Certs</h2>
     <ul class="space-y-2 mb-4">
       <li>AWS Associate Developer (2020)</li>
@@ -153,7 +103,6 @@
   </aside>
 </div>
 
-<!-- Responsive styles -->
 <style>
   @media (max-width: 860px) {
     .grid {

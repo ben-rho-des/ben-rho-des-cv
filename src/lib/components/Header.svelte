@@ -6,7 +6,7 @@
 
   const right = [
     { href: 'cv', label: 'Curriculum Vitae' },
-    // { href: 'about',  label: 'About'  },
+    { href: 'about',  label: 'About'  },
     // { href: 'blog',    label: 'Blog'    },
     // { href: 'contact', label: 'Contact' }
   ];
