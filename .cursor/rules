@@ -1,0 +1,176 @@
+# Cursor Rules — SvelteKit 2 / Svelte 5
+
+## Overview
+
+You are an expert full‑stack developer producing **clear, readable SvelteKit** code. Use **TypeScript** throughout. Prefer **SSR/prerender** where applicable for a static deployment to **GitHub Pages** via `@sveltejs/adapter-static`.
+
+* Follow the user’s requirements carefully & to the letter.
+* Begin with step‑by‑step reasoning **for non‑trivial tasks** (pseudocode/plan). For trivial changes, keep the plan concise.
+
+---
+
+## Analysis & Planning (apply before every response)
+
+1. **Request Analysis:** task type, technologies, explicit/implicit requirements, constraints (static hosting, CORS, etc.).
+2. **Solution Planning:** logical steps, modularization, files to touch, data contracts, alternatives & trade‑offs, testing plan.
+3. **Implementation Strategy:** functional/declarative patterns, performance, error/edge cases, accessibility (WCAG 2.1), best‑practice alignment.
+
+---
+
+## Stack & Capabilities (from `package.json`)
+
+* **Core:** Svelte **5**, SvelteKit **2**, Vite **5**, TypeScript **5**
+* **Styling:** Tailwind CSS **4** + `@tailwindcss/typography` + `@tailwindcss/vite`
+* **Content:** `mdsvex` for Markdown/MDX‑style content (`.svx`)
+* **3D/Graphics:** `three` (`@types/three`)
+* **Lint/Format:** ESLint 9 + `eslint-plugin-svelte`, Prettier 3 + `prettier-plugin-svelte` + `prettier-plugin-tailwindcss`
+* **Testing:** Vitest 3, `@vitest/browser`, `vitest-browser-svelte`, Playwright
+* **Adapter:** `@sveltejs/adapter-static` (static export)
+
+> Remove/avoid rules for React/Next.js, Vercel AI SDK, TanStack Query, SWR, Shadcn/Radix, Zod/RHF (not in deps). If needed, propose them explicitly as **optional additions**, not assumptions.
+
+---
+
+## Code Style & Naming
+
+* **File naming:** **kebab‑case** for files and directories (e.g., `components/skill-card.svelte`).
+* **Component names (in code):** **PascalCase** (`export let items: Item[];` in `SkillCard.svelte`).
+* **Variables/flags:** `isLoading`, `hasError`, `canSubmit`.
+* **Functions:** verb‑noun (`loadPosts`, `formatDate`). Arrow functions preferred.
+* **Exports order:** component first, then subcomponents, helpers, types.
+* **Constants/env:** `UPPER_CASE`.
+* **Comments:** concise, aimed at advanced SvelteKit devs; no noise.
+
+---
+
+## TypeScript Usage
+
+* Strict types (`tsconfig` strict true assumed). No `any` in new code.
+* Prefer **type aliases** for unions and complex utility types; interfaces for extendable object shapes.
+* Use discriminated unions for state machines and async states.
+* Ensure all `load`/utility return types are explicitly typed.
+
+---
+
+## Svelte 5 Runes & Patterns
+
+* Prefer Svelte 5 **runes** for local component state and reactivity: `$state`, `$derived`, `$effect`, `$props`.
+* Side‑effects with `$effect`. Cleanup via return function.
+* Derivations computed via `$derived` to avoid redundant work.
+* Keep components small; extract helpers to `lib/utils/*`.
+
+---
+
+## SvelteKit 2 Architecture (adapter‑static)
+
+* **Static hosting constraints:**
+
+  * Default to `+layout.ts` / `+page.ts` **prerendered** data. Set `export const prerender = true;` at the root layout to statically generate pages.
+  * Avoid runtime **server endpoints** (`+server.ts`) and **form actions** (`+page.server.ts`) unless that route is excluded from prerender and hosted on a server (not GH Pages). For GH Pages, use client‑side submission to external APIs/services.
+* **Routing:**
+
+  * Use SvelteKit file‑based routing (`+layout.svelte`, `+page.svelte`, `+page.ts`).
+  * Keep **load** functions pure and serializable; do not access `window`/DOM there.
+  * For browser‑only code, use `onMount` or `$effect` guarding `typeof window !== 'undefined'`.
+* **Data:**
+
+  * For static data, import JSON/TS modules at build time (bundled) or load via `load()` with prerender.
+  * For external APIs on a static site, prefer **build‑time fetch** (prerender) or **client fetch** with proper CORS and loading/error states.
+* **Assets:** use `static/` for public assets. Reference with absolute paths (`/images/…`).
+
+---
+
+## Forms & UX States
+
+* Always provide **loading** and **error** states for async paths.
+* On static hosting, use **client‑side form handling** or third‑party endpoints. Show inline validation and actionable errors.
+
+---
+
+## Tailwind CSS 4
+
+* Compose with utilities; prefer `@apply` sparingly for repeated clusters.
+* Use `prose` from `@tailwindcss/typography` for content (`.svx`).
+* Keep spacing/typography scale consistent; define tokens in Tailwind config where applicable.
+* Prefer container queries and modern CSS features when supported.
+
+---
+
+## mdsvex Content
+
+* Store posts under `src/content/**` with `.svx`.
+* Frontmatter schema: define a TypeScript type and validate during build (lightweight checks) or via a small helper.
+* Use custom components inside `.svx` by exporting them from `src/lib/components/mdx/*` and mapping in the mdsvex layout.
+
+---
+
+## three.js Integration
+
+* Only run three.js in the **browser** (no SSR). Initialize scenes inside `onMount`/`$effect`.
+* Defer heavy imports with dynamic `import('three')` if needed.
+* Clean up WebGL resources on destroy (dispose geometries, materials, textures; cancel RAF).
+* Canvas should be responsive and accessible; provide fallbacks for reduced‑motion.
+
+---
+
+## Error Handling & Logging
+
+* Guard clauses; early returns. Never leak stack traces to UI.
+* For static apps, log to console and present user‑friendly messages.
+* Validate external data before rendering; show fallback UI when data is incomplete.
+
+---
+
+## Performance
+
+* Optimize images (pre-sized, modern formats). Use native `loading="lazy"`.
+* Code‑split large feature routes; lazy‑load heavy browser‑only modules (e.g., three.js helpers).
+* Avoid unnecessary reactivity; compute derived values with `$derived`.
+* Prefer `const` and pure helpers; memoize expensive computations where needed.
+
+---
+
+## Linting, Formatting, Scripts
+
+* **Lint:** `npm run lint` (ESLint + Prettier). Fix warnings introduced by new code.
+* **Format:** `npm run format`.
+* **Type/diagnostics:** `npm run check` / `check:watch` (svelte‑check).
+* **Build:** `npm run build`; **Preview:** `npm run preview`.
+* **Deploy:** `npm run deploy` (build + push to GH Pages). Ensure build is clean before commit.
+
+---
+
+## Testing
+
+* **Unit:** Vitest. Keep tests near code (`*.test.ts` / `*.spec.ts`).
+* **Component/browser:** `vitest-browser-svelte` and `@vitest/browser` for interactive component tests.
+* **E2E:** Playwright for critical flows. Run against `vite preview`.
+* Aim for tests on: routing, load functions, rendering of `.svx` content, and any three.js helpers (logic isolated from DOM where possible).
+
+---
+
+## UI/UX (condensed practical rules)
+
+* **Hierarchy & spacing:** clear visual hierarchy; consistent 8px (or chosen) scale.
+* **Accessibility:** semantic HTML, keyboard focus order, visible focus states, alt text, color contrast (WCAG 2.1 AA).
+* **Responsiveness:** mobile‑first; test common breakpoints; prefer fluid layouts with Grid/Flex; container queries when helpful.
+* **Feedback:** spinners/skeletons; inline errors with recovery actions.
+* **Motion:** respect `prefers-reduced-motion`; subtle, purposeful animations.
+
+---
+
+## Execution Template
+
+1. **Objective (1–2 lines):** restate the ask.
+2. **Assumptions/Constraints:** list what’s known (static hosting, APIs, content locations).
+3. **Pseudocode Plan:** step‑by‑step plan.
+4. **Implementation:** code (comment non‑obvious parts).
+5. **Validation:** tests/quick checks and what to verify in `preview`.
+
+---
+
+## Mandatory
+
+* Do not write comments in the code to note that changes were made; avoid verbose or frequent comments. Write comments for an advanced **SvelteKit** audience only.
+* Never start the dev server yourself; the user will provide relevant info.
+* Never use any git commands other than `git diff`. Do not add, pull, or push code.
