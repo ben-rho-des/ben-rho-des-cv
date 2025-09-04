@@ -30,34 +30,12 @@ export interface NavItem {
 	label: string;
 }
 
-// Kaleidoscope component props
-export interface KaleidoscopeProps {
-	imageSrc: string;
-	segments: number;
-	mode: 'static' | 'loop' | 'mouse' | 'scroll';
-	scaleFactor: number;
-	motionFactor: number;
-	opacity: number;
-	imageAspect: number;
-}
-
-// Page title component props
-export interface PageTitleProps {
-	title: string;
-}
-
 // Form data interface
 export interface ContactFormData {
 	name: string;
 	email: string;
 	message: string;
 	website: string; // honeypot
-}
-
-// Animation options
-export interface AnimationOptions {
-	titleOptions: string[];
-	imageOptions: string[];
 }
 
 // Three.js cleanup function type

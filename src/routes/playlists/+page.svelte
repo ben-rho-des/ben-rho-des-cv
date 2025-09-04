@@ -55,7 +55,6 @@
 	</div>
 </div>
 
-<!-- Responsive styles -->
 <style>
 	@media (max-width: 860px) {
 		.grid {

@@ -359,3 +359,7 @@ a:focus {
 .col-start-6 {
 	grid-column-start: 6;
 }
+
+body.mode-🫥 .fixed:before {
+	background: none;
+}

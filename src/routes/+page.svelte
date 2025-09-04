@@ -3,20 +3,7 @@
 	import { browser } from '$app/environment';
 	import { tweened } from 'svelte/motion';
 	import { getReducedMotionDuration } from '$lib/utils/accessibility';
-	import { DEFAULTS } from '$lib/constants';
-
-	// Kaleidoscope-specific constants
-	const MODES = {
-		STATIC: 'static',
-		LOOP: 'loop',
-		MOUSE: 'mouse',
-		SCROLL: 'scroll'
-	} as const;
-
-	// Animation durations (in milliseconds)
-	const ANIMATION_DURATIONS = {
-		IMAGE_ASPECT_CYCLE: 13000
-	} as const;
+	import { DEFAULTS, KALEIDOSCOPE_MODES, ANIMATION_DURATIONS } from '$lib/constants';
 
 	const titleOptions = [
 		'end times thin hope',
@@ -36,17 +23,18 @@
 		'owe.png'
 	];
 
-	const mode: 'static' | 'loop' | 'mouse' | 'scroll' = MODES.LOOP;
+	const mode: 'static' | 'loop' | 'mouse' | 'scroll' = KALEIDOSCOPE_MODES.LOOP;
 	let segments = $state(8);
 	let scaleFactor = $state(DEFAULTS.SCALE_FACTOR);
 	let motionFactor = $state(DEFAULTS.MOTION_FACTOR);
-	let opacity = $state(DEFAULTS.OPACITY);
 	let showControls = $state(false);
 
 	const imageAspect = tweened(0.5, {
 		duration: getReducedMotionDuration(ANIMATION_DURATIONS.IMAGE_ASPECT_CYCLE),
 		easing: (t) => 0.5 * (1 + Math.sin(t * Math.PI))
 	});
+
+	let imageAspectControl = $state(0.5);
 
 	const selectedTitle = titleOptions[Math.floor(Math.random() * titleOptions.length)];
 	const imageSrc = imageOptions[Math.floor(Math.random() * imageOptions.length)];
@@ -70,6 +58,10 @@
 		};
 	});
 
+	$effect(() => {
+		imageAspect.set(imageAspectControl);
+	});
+
 	function startImageAspectAnimation(): void {
 		const duration = getReducedMotionDuration(ANIMATION_DURATIONS.IMAGE_ASPECT_CYCLE);
 		if (duration === 0) return; // Skip animation if reduced motion is preferred
@@ -86,7 +78,7 @@
 </script>
 
 <svelte:head>
-	<title>Ben-rho-des cv website</title>
+	<title>Ben-rho-des cv</title>
 </svelte:head>
 
 <div class="fixed top-0 left-0 z-0 m-0 h-screen w-screen overflow-hidden p-0 font-sans">
@@ -97,7 +89,6 @@
 			{segments}
 			{scaleFactor}
 			{motionFactor}
-			{opacity}
 			imageAspect={$imageAspect}
 		/>
 	</div>
@@ -118,7 +109,7 @@
 </div>
 {#if showControls}
 	<div
-		class="absolute top-30 left-1/2 z-[100] grid max-w-4xl -translate-x-1/2 transform grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4 rounded-lg bg-[var(--bg)] p-4 backdrop-blur-md"
+		class="absolute top-83 left-1/2 z-[100] grid max-w-4xl -translate-x-1/2 transform grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4 rounded-lg border-2 border-primary bg-[var(--bg)] p-4 backdrop-blur-md"
 	>
 		<div class="flex flex-col gap-2">
 			<label for="segments" class="text-sm font-medium text-[var(--fg)]">Segments: {segments}</label
@@ -158,20 +149,7 @@
 				id="motionFactor"
 				bind:value={motionFactor}
 				min="0"
-				max="2"
-				step="0.1"
-				class="w-full accent-[var(--primary)]"
-			/>
-		</div>
-
-		<div class="flex flex-col gap-2">
-			<label for="opacity" class="text-sm font-medium text-[var(--fg)]">Opacity: {opacity}</label>
-			<input
-				type="range"
-				id="opacity"
-				bind:value={opacity}
-				min="0"
-				max="1"
+				max="4"
 				step="0.1"
 				class="w-full accent-[var(--primary)]"
 			/>
@@ -179,12 +157,12 @@
 
 		<div class="flex flex-col gap-2">
 			<label for="imageAspect" class="text-sm font-medium text-[var(--fg)]"
-				>Image Aspect: {$imageAspect.toFixed(1)}</label
+				>Image Aspect: {imageAspectControl.toFixed(1)}</label
 			>
 			<input
 				type="range"
 				id="imageAspect"
-				bind:value={$imageAspect}
+				bind:value={imageAspectControl}
 				min="0.5"
 				max="2"
 				step="0.1"
@@ -202,9 +180,9 @@
 		left: 0;
 		width: 100%;
 		height: 100%;
-		background: url('/bg-tile.png');
 		z-index: 2;
 		mix-blend-mode: multiply;
 		opacity: 0.6;
+		background: url('/bg-tile.png');
 	}
 </style>

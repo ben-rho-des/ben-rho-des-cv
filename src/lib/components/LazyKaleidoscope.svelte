@@ -7,7 +7,6 @@
 		mode = 'static',
 		scaleFactor = 1,
 		motionFactor = 1,
-		opacity = 1,
 		imageAspect = 1
 	} = $props<{
 		imageSrc?: string;
@@ -15,7 +14,6 @@
 		mode?: 'static' | 'loop' | 'mouse' | 'scroll';
 		scaleFactor?: number;
 		motionFactor?: number;
-		opacity?: number;
 		imageAspect?: number;
 	}>();
 
@@ -51,7 +49,7 @@
 		</div>
 	</div>
 {:else if Kaleidoscope}
-	<Kaleidoscope {imageSrc} {segments} {mode} {scaleFactor} {motionFactor} {opacity} {imageAspect} />
+	<Kaleidoscope {imageSrc} {segments} {mode} {scaleFactor} {motionFactor} {imageAspect} />
 {/if}
 
 <style>
@@ -62,6 +60,7 @@
 		justify-content: center;
 		min-height: 50vh;
 		width: 100%;
+		background-color: var(--bg);
 	}
 
 	.error-content {

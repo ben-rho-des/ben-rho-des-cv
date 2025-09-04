@@ -4,7 +4,7 @@
 	import PlayButton from '$lib/components/icons/PlayButton.svelte';
 	import DisplayGrid from '$lib/components/icons/DisplayGrid.svelte';
 	import Square from '$lib/components/icons/Square.svelte';
-	import { trapFocus } from '$lib/utils/accessibility';
+	import MobileMenu from '$lib/components/MobileMenu.svelte';
 	import { THEMES } from '$lib/constants';
 
 	const right = [
@@ -21,10 +21,8 @@
 	};
 
 	let header: HTMLElement;
-	let mobileMenuContent: HTMLElement;
 	let isScrolled = $state(false);
 	let isMobileMenuOpen = $state(false);
-	let focusTrapCleanup: (() => void) | null = null;
 
 	function toggleTheme() {
 		modeStore.toggleTheme();
@@ -36,26 +34,10 @@
 
 	function toggleMobileMenu() {
 		isMobileMenuOpen = !isMobileMenuOpen;
-		if (isMobileMenuOpen && mobileMenuContent) {
-			// Focus the first focusable element in the menu
-			const firstFocusable = mobileMenuContent.querySelector(
-				'button, a, [tabindex]:not([tabindex="-1"])'
-			) as HTMLElement;
-			firstFocusable?.focus();
-			// Set up focus trap
-			focusTrapCleanup = trapFocus(mobileMenuContent);
-		} else if (!isMobileMenuOpen && focusTrapCleanup) {
-			focusTrapCleanup();
-			focusTrapCleanup = null;
-		}
 	}
 
 	function closeMobileMenu() {
 		isMobileMenuOpen = false;
-		if (focusTrapCleanup) {
-			focusTrapCleanup();
-			focusTrapCleanup = null;
-		}
 	}
 
 	$effect(() => {
@@ -82,10 +64,6 @@
 			document.removeEventListener('scroll', scrollHandler, { capture: true });
 			document.documentElement.removeEventListener('scroll', scrollHandler, { capture: true });
 			document.body.removeEventListener('scroll', scrollHandler, { capture: true });
-			// Clean up focus trap if it exists
-			if (focusTrapCleanup) {
-				focusTrapCleanup();
-			}
 		};
 	});
 </script>
@@ -105,13 +83,13 @@
 		</h2>
 
 		<div class="header-actions">
-			<button class="action-btn" on:click={toggleTheme} aria-label="Toggle theme">
+			<button class="action-btn" onclick={toggleTheme} aria-label="Toggle theme">
 				{$modeStore.theme === THEMES.DARK ? THEMES.LIGHT : THEMES.DARK}
 			</button>
 			<a href="playlists" class="action-btn" aria-label="Go to playlists">
 				<PlayButton size={24} />
 			</a>
-			<button class="action-btn" on:click={toggleGrid} aria-label="Toggle grid">
+			<button class="action-btn" onclick={toggleGrid} aria-label="Toggle grid">
 				{#if $modeStore.grid}
 					<Square size={24} />
 				{:else}
@@ -125,7 +103,7 @@
 				<a
 					href={item.href}
 					class:is-active-route={isActive(item.href, currentPath)}
-					on:click={closeMobileMenu}>{item.label}</a
+					onclick={closeMobileMenu}>{item.label}</a
 				>
 			{/each}
 		</nav>
@@ -133,7 +111,7 @@
 		<!-- Mobile menu button -->
 		<button
 			class="mobile-menu-btn"
-			on:click={toggleMobileMenu}
+			onclick={toggleMobileMenu}
 			aria-label="Toggle mobile menu"
 			aria-expanded={isMobileMenuOpen}
 		>
@@ -141,54 +119,14 @@
 		</button>
 	</div>
 
-	<!-- Mobile menu overlay -->
-	{#if isMobileMenuOpen}
-		<div
-			class="mobile-menu-overlay"
-			on:click={closeMobileMenu}
-			on:keydown={(e) => e.key === 'Escape' && closeMobileMenu()}
-			aria-hidden="true"
-		>
-			<div
-				class="mobile-menu-content"
-				on:click|stopPropagation
-				on:keydown={(e) => e.key === 'Escape' && closeMobileMenu()}
-				role="dialog"
-				aria-modal="true"
-				aria-label="Mobile navigation menu"
-				tabindex="-1"
-				bind:this={mobileMenuContent}
-			>
-				<!-- Mobile action buttons -->
-				<div class="mobile-actions">
-					<button class="action-btn" on:click={toggleTheme} aria-label="Toggle theme">
-						{$modeStore.theme === THEMES.DARK ? THEMES.LIGHT : THEMES.DARK}
-					</button>
-					<a href="playlists" class="action-btn" aria-label="Go to playlists">
-						<PlayButton size={20} />
-					</a>
-					<button class="action-btn" on:click={toggleGrid} aria-label="Toggle grid">
-						{#if $modeStore.grid}
-							<Square size={20} />
-						{:else}
-							<DisplayGrid size={20} />
-						{/if}
-					</button>
-				</div>
-
-				<!-- Mobile navigation -->
-				<nav class="mobile-nav" aria-label="Mobile navigation">
-					{#each right as item (item.href)}
-						<a
-							href={item.href}
-							class:is-active-route={isActive(item.href, currentPath)}
-							on:click={closeMobileMenu}>{item.label}</a
-						>
-					{/each}
-				</nav>
-			</div>
-		</div>
-	{/if}
+	<!-- Mobile menu -->
+	<MobileMenu
+		isOpen={isMobileMenuOpen}
+		onClose={closeMobileMenu}
+		navItems={right}
+		{currentPath}
+		{isActive}
+	/>
 </header>
 
 <style>
@@ -344,62 +282,6 @@
 
 	.mobile-menu-btn:focus {
 		outline: none;
-	}
-
-	.mobile-menu-overlay {
-		position: fixed;
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		background: rgba(0, 0, 0, 0.8);
-		z-index: 99;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	}
-
-	.mobile-menu-content {
-		background: var(--bg);
-		padding: 2rem;
-		border-radius: 1rem;
-		max-width: 90vw;
-		max-height: 90vh;
-		overflow-y: auto;
-		display: flex;
-		flex-direction: column;
-		gap: 2rem;
-	}
-
-	.mobile-actions {
-		display: flex;
-		gap: 1rem;
-		justify-content: center;
-		padding-bottom: 1rem;
-		border-bottom: 1px solid var(--border);
-	}
-
-	.mobile-nav {
-		display: flex;
-		flex-direction: column;
-		gap: 1rem;
-		text-align: center;
-	}
-
-	.mobile-nav a {
-		font-size: var(--font-size-lg);
-		padding: 1rem;
-		border-radius: 0.5rem;
-		transition: background-color 0.2s ease;
-	}
-
-	.mobile-nav a:hover {
-		background-color: rgba(255, 255, 255, 0.1);
-	}
-
-	.mobile-nav a.is-active-route {
-		background-color: var(--primary);
-		color: white;
 	}
 
 	@media (max-width: 1000px) {

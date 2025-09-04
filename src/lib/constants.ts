@@ -11,9 +11,21 @@ export const DEFAULTS = {
 	GRID_ENABLED: false,
 	SEGMENTS: 6,
 	SCALE_FACTOR: 1,
-	MOTION_FACTOR: 1,
-	OPACITY: 1,
+	MOTION_FACTOR: 1.3,
 	IMAGE_ASPECT: 1
+} as const;
+
+// Kaleidoscope modes
+export const KALEIDOSCOPE_MODES = {
+	STATIC: 'static',
+	LOOP: 'loop',
+	MOUSE: 'mouse',
+	SCROLL: 'scroll'
+} as const;
+
+// Animation durations (in milliseconds)
+export const ANIMATION_DURATIONS = {
+	IMAGE_ASPECT_CYCLE: 13000
 } as const;
 
 const CSS_CLASSES_MODE_PREFIX = 'mode-';

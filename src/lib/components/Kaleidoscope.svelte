@@ -7,23 +7,21 @@
 		cleanupThreeResources,
 		isWebGLSupported
 	} from '$lib/utils/three-helpers';
-	import { DEFAULTS } from '$lib/constants';
-
-	// Kaleidoscope-specific constants
-	const MODES = {
-		STATIC: 'static',
-		LOOP: 'loop',
-		MOUSE: 'mouse',
-		SCROLL: 'scroll'
-	} as const;
+	import { DEFAULTS, KALEIDOSCOPE_MODES } from '$lib/constants';
+	import { vertexShader, fragmentShader } from './kaleidoscope/shaders';
+	import {
+		createMouseHandler,
+		createScrollHandler,
+		createResizeHandler
+	} from './kaleidoscope/events';
+	import { createRenderLoop } from './kaleidoscope/renderer';
 
 	const {
 		imageSrc = '',
 		segments = DEFAULTS.SEGMENTS,
-		mode = MODES.STATIC,
+		mode = KALEIDOSCOPE_MODES.STATIC,
 		scaleFactor = DEFAULTS.SCALE_FACTOR,
 		motionFactor = DEFAULTS.MOTION_FACTOR,
-		opacity = DEFAULTS.OPACITY,
 		imageAspect = DEFAULTS.IMAGE_ASPECT
 	} = $props<{
 		imageSrc?: string;
@@ -31,88 +29,27 @@
 		mode?: 'static' | 'loop' | 'mouse' | 'scroll';
 		scaleFactor?: number;
 		motionFactor?: number;
-		opacity?: number;
 		imageAspect?: number;
 	}>();
 
-	let containerElement: HTMLElement;
+	const opacity = 1;
+
+	let containerElement = $state<HTMLElement>();
 	let scene: import('three').Scene;
 	let camera: import('three').OrthographicCamera;
 	let renderer: import('three').WebGLRenderer;
 	let material: import('three').ShaderMaterial;
 	let geometry: import('three').PlaneGeometry;
 	let plane: import('three').Mesh;
-	const mouse = $state({ x: 0, y: 0 });
-	const isPlaying = $state(true);
-	let lastTime = performance.now() / 1000;
-	let animationId: number;
 	let webglSupported = $state(true);
 	let texture: import('three').Texture;
 	let THREE: typeof import('three');
 
-	const vertexShader = `
-		varying vec2 vUv;
-		
-		void main() {
-			vUv = uv;
-			gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-		}
-	`;
-
-	const fragmentShader = `
-		precision mediump float;
-		
-		uniform sampler2D uTexture;
-		uniform vec4 resolution;
-		uniform float uOpacity;
-		uniform float segments;
-		uniform vec2 uOffset;
-		uniform float uRotation;
-		uniform float uOffsetAmount;
-		uniform float uRotationAmount;
-		uniform float uScaleFactor;
-		uniform float uImageAspect;
-		
-		varying vec2 vUv;
-		
-		const float PI = 3.14159265359;
-		
-		vec2 adjustUV(vec2 uv, vec2 offset, float rotation) {
-			vec2 uvOffset = uv + offset * uOffsetAmount;
-			float cosRot = cos(rotation * uRotationAmount);
-			float sinRot = sin(rotation * uRotationAmount);
-			mat2 rotMat = mat2(cosRot, -sinRot, sinRot, cosRot);
-			return rotMat * (uvOffset - vec2(0.5)) + vec2(0.5);
-		}
-		
-		void main() {
-			vec2 newUV = (vUv - vec2(0.5)) * resolution.zw + vec2(0.5);
-			vec2 uv = newUV * 2.0 - 1.0;
-			
-			float angle = atan(uv.y, uv.x);
-			float radius = length(uv);
-			
-			float segment = PI * 2.0 / segments;
-			angle = mod(angle, segment);
-			angle = segment - abs(segment / 2.0 - angle);
-			
-			uv = radius * vec2(cos(angle), sin(angle));
-			
-			float scale = 1.0 / uScaleFactor;
-			vec2 adjustedUV = adjustUV(uv * scale + scale, uOffset, uRotation);
-			
-			vec2 aspectCorrectedUV = vec2(adjustedUV.x, adjustedUV.y * uImageAspect);
-			
-			vec2 tileIndex = floor(aspectCorrectedUV);
-			vec2 oddTile = mod(tileIndex, 2.0);
-			vec2 mirroredUV = mix(fract(aspectCorrectedUV), 1.0 - fract(aspectCorrectedUV), oddTile);
-			
-			vec4 color = texture2D(uTexture, mirroredUV);
-			color.a *= uOpacity;
-			
-			gl_FragColor = color;
-		}
-	`;
+	// Event handlers
+	let mouseHandler: ReturnType<typeof createMouseHandler> | null = null;
+	let scrollHandler: ReturnType<typeof createScrollHandler> | null = null;
+	let resizeHandler: ReturnType<typeof createResizeHandler> | null = null;
+	let renderLoop: ReturnType<typeof createRenderLoop> | null = null;
 
 	$effect(() => {
 		if (browser) {
@@ -122,8 +59,16 @@
 				import('three').then((THREE_MODULE) => {
 					THREE = THREE_MODULE;
 					initThreeJS();
-					setupEventListeners();
+					setupEventHandlers();
 					startRenderLoop();
+
+					// Update uniforms with current prop values after initialization
+					if (material) {
+						material.uniforms.segments.value = segments;
+						material.uniforms.uScaleFactor.value = scaleFactor;
+						material.uniforms.uOpacity.value = opacity;
+						material.uniforms.uImageAspect.value = imageAspect;
+					}
 				});
 			}
 		}
@@ -140,6 +85,8 @@
 
 		camera = createOrthographicCamera();
 
+		if (!containerElement) return;
+
 		renderer = createWebGLRenderer(
 			containerElement,
 			containerElement.offsetWidth,
@@ -149,7 +96,6 @@
 		texture = loadTexture(
 			imageSrc,
 			(loadedTexture: import('three').Texture) => {
-				console.log('Texture loaded successfully');
 				texture = loadedTexture;
 			},
 			(error: unknown) => {
@@ -179,136 +125,47 @@
 		geometry = new THREE.PlaneGeometry(1, 1, 1, 1);
 		plane = new THREE.Mesh(geometry, material);
 		scene.add(plane);
-
-		handleResize();
 	}
 
-	function setupEventListeners() {
+	function setupEventHandlers() {
+		if (!containerElement) return;
+
 		if (mode === 'mouse') {
-			containerElement.addEventListener('mousemove', handleMouseMove);
-			containerElement.addEventListener('touchmove', handleTouchMove);
+			mouseHandler = createMouseHandler(containerElement, material, motionFactor);
 		}
 
 		if (mode === 'scroll') {
-			window.addEventListener('scroll', handleScroll);
+			scrollHandler = createScrollHandler(containerElement, material, motionFactor);
 		}
 
-		window.addEventListener('resize', handleResize);
-	}
-
-	function handleMouseMove(event: MouseEvent) {
-		updateMousePosition(event.clientX, event.clientY);
-	}
-
-	function handleTouchMove(event: TouchEvent) {
-		if (event.touches.length > 0) {
-			updateMousePosition(event.touches[0].clientX, event.touches[0].clientY);
-		}
-	}
-
-	function updateMousePosition(clientX: number, clientY: number) {
-		const rect = containerElement.getBoundingClientRect();
-		mouse.x = (clientX - rect.left) / containerElement.offsetWidth;
-		mouse.y = (clientY - rect.top) / containerElement.offsetHeight;
-	}
-
-	function handleScroll() {
-		const rect = containerElement.getBoundingClientRect();
-		const top = rect.top;
-		const bottom = rect.bottom;
-
-		if (top < window.innerHeight && bottom >= 0) {
-			const totalHeight = window.innerHeight + containerElement.offsetHeight;
-			const scrollProgress = (window.innerHeight - top) / totalHeight;
-			const maxRotation = 2 * Math.PI;
-			material.uniforms.uRotation.value = scrollProgress * maxRotation * motionFactor;
-		}
-	}
-
-	function handleResize() {
-		const width = containerElement.offsetWidth;
-		const height = containerElement.offsetHeight;
-
-		renderer.setSize(width, height);
-		camera.updateProjectionMatrix();
-
-		let aspectX, aspectY;
-		if (height / width > 1) {
-			aspectX = (width / height) * 1;
-			aspectY = 1;
-		} else {
-			aspectX = 1;
-			aspectY = height / width / 1;
-		}
-
-		material.uniforms.resolution.value.x = width;
-		material.uniforms.resolution.value.y = height;
-		material.uniforms.resolution.value.z = aspectX;
-		material.uniforms.resolution.value.w = aspectY;
-	}
-
-	function updateDataTexture(time: number) {
-		time /= 1000;
-
-		if (mode === 'mouse') {
-			const offsetX = 2 * (mouse.x - 0.5) * motionFactor;
-			const offsetY = 2 * (mouse.y - 0.5) * motionFactor;
-			material.uniforms.uOffset.value.set(offsetX, offsetY);
-
-			const rotation = Math.PI * (mouse.y - 0.5) * 2 * motionFactor;
-			material.uniforms.uRotation.value = rotation;
-		} else if (mode === 'loop') {
-			const deltaTime = time - lastTime;
-			const rotationSpeed = 0.1;
-			material.uniforms.uRotation.value += rotationSpeed * motionFactor * deltaTime;
-			lastTime = time;
-		}
+		resizeHandler = createResizeHandler(containerElement, renderer, camera, material);
 	}
 
 	function startRenderLoop() {
-		function render(time = 0) {
-			if (isPlaying && renderer && scene && camera) {
-				try {
-					if (mode === 'mouse' || mode === 'loop') {
-						updateDataTexture(time);
-					}
-
-					renderer.render(scene, camera);
-					animationId = requestAnimationFrame(render);
-				} catch (error) {
-					console.error('Render error:', error);
-				}
-			}
-		}
-
-		render();
+		renderLoop = createRenderLoop(renderer, scene, camera, material, mode, motionFactor);
 	}
 
 	function cleanup(): void {
-		if (animationId) {
-			cancelAnimationFrame(animationId);
-		}
+		// Clean up event handlers
+		mouseHandler?.cleanup();
+		scrollHandler?.cleanup();
+		resizeHandler?.cleanup();
+		renderLoop?.cleanup();
 
+		// Clean up Three.js resources
 		cleanupThreeResources(renderer, material, geometry);
-
-		if (mode === 'mouse') {
-			containerElement.removeEventListener('mousemove', handleMouseMove);
-			containerElement.removeEventListener('touchmove', handleTouchMove);
-		}
-
-		if (mode === 'scroll') {
-			window.removeEventListener('scroll', handleScroll);
-		}
-
-		window.removeEventListener('resize', handleResize);
 	}
 
+	// Effect to update uniforms when props change or material becomes available
 	$effect(() => {
 		if (material) {
 			material.uniforms.segments.value = segments;
 			material.uniforms.uScaleFactor.value = scaleFactor;
 			material.uniforms.uOpacity.value = opacity;
 			material.uniforms.uImageAspect.value = imageAspect;
+			// motionFactor is used in updateDataTexture function, so we don't need to set it here
+			// but we need to include it in the effect dependencies
+			void motionFactor; // This ensures the effect re-runs when motionFactor changes
 		}
 	});
 </script>
