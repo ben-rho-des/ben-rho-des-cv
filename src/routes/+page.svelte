@@ -1,6 +1,5 @@
 <script lang="ts">
 	import LazyKaleidoscope from '$lib/components/LazyKaleidoscope.svelte';
-	import { onMount, onDestroy } from 'svelte';
 	import { browser } from '$app/environment';
 	import { tweened } from 'svelte/motion';
 	import { getReducedMotionDuration } from '$lib/utils/accessibility';
@@ -37,20 +36,20 @@
 		'owe.png'
 	];
 
-	let mode: 'static' | 'loop' | 'mouse' | 'scroll' = MODES.LOOP;
-	let segments = 8;
-	let scaleFactor = DEFAULTS.SCALE_FACTOR;
-	let motionFactor = DEFAULTS.MOTION_FACTOR;
-	let opacity = DEFAULTS.OPACITY;
-	let showControls = false;
+	const mode: 'static' | 'loop' | 'mouse' | 'scroll' = MODES.LOOP;
+	let segments = $state(8);
+	let scaleFactor = $state(DEFAULTS.SCALE_FACTOR);
+	let motionFactor = $state(DEFAULTS.MOTION_FACTOR);
+	let opacity = $state(DEFAULTS.OPACITY);
+	let showControls = $state(false);
 
 	const imageAspect = tweened(0.5, {
 		duration: getReducedMotionDuration(ANIMATION_DURATIONS.IMAGE_ASPECT_CYCLE),
 		easing: (t) => 0.5 * (1 + Math.sin(t * Math.PI))
 	});
 
-	let selectedTitle = titleOptions[Math.floor(Math.random() * titleOptions.length)];
-	let imageSrc = imageOptions[Math.floor(Math.random() * imageOptions.length)];
+	const selectedTitle = titleOptions[Math.floor(Math.random() * titleOptions.length)];
+	const imageSrc = imageOptions[Math.floor(Math.random() * imageOptions.length)];
 
 	function handleKeyPress(event: KeyboardEvent) {
 		if (event.key === '`' || event.key === '~') {
@@ -58,11 +57,17 @@
 		}
 	}
 
-	onMount(() => {
+	$effect(() => {
 		if (browser) {
 			document.addEventListener('keydown', handleKeyPress);
 			startImageAspectAnimation();
 		}
+
+		return () => {
+			if (browser) {
+				document.removeEventListener('keydown', handleKeyPress);
+			}
+		};
 	});
 
 	function startImageAspectAnimation(): void {
@@ -78,11 +83,6 @@
 		};
 		setTimeout(animate, 100);
 	}
-	onDestroy(() => {
-		if (browser) {
-			document.removeEventListener('keydown', handleKeyPress);
-		}
-	});
 </script>
 
 <svelte:head>

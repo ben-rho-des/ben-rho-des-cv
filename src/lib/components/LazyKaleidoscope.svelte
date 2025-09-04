@@ -1,29 +1,39 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import LoadingSpinner from './LoadingSpinner.svelte';
 
-	export let imageSrc: string = '';
-	export let segments: number = 6;
-	export let mode: 'static' | 'loop' | 'mouse' | 'scroll' = 'static';
-	export let scaleFactor: number = 1;
-	export let motionFactor: number = 1;
-	export let opacity: number = 1;
-	export let imageAspect: number = 1;
+	const {
+		imageSrc = '',
+		segments = 6,
+		mode = 'static',
+		scaleFactor = 1,
+		motionFactor = 1,
+		opacity = 1,
+		imageAspect = 1
+	} = $props<{
+		imageSrc?: string;
+		segments?: number;
+		mode?: 'static' | 'loop' | 'mouse' | 'scroll';
+		scaleFactor?: number;
+		motionFactor?: number;
+		opacity?: number;
+		imageAspect?: number;
+	}>();
 
-	let Kaleidoscope: typeof import('./Kaleidoscope.svelte').default | null = null;
-	let isLoading = true;
-	let hasError = false;
+	let Kaleidoscope = $state<typeof import('./Kaleidoscope.svelte').default | null>(null);
+	let isLoading = $state(true);
+	let hasError = $state(false);
 
-	onMount(async () => {
-		try {
-			const module = await import('./Kaleidoscope.svelte');
-			Kaleidoscope = module.default;
-			isLoading = false;
-		} catch (error) {
-			console.error('Failed to load Kaleidoscope component:', error);
-			hasError = true;
-			isLoading = false;
-		}
+	$effect(() => {
+		import('./Kaleidoscope.svelte')
+			.then((module) => {
+				Kaleidoscope = module.default;
+				isLoading = false;
+			})
+			.catch((error) => {
+				console.error('Failed to load Kaleidoscope component:', error);
+				hasError = true;
+				isLoading = false;
+			});
 	});
 </script>
 
@@ -41,16 +51,7 @@
 		</div>
 	</div>
 {:else if Kaleidoscope}
-	<svelte:component
-		this={Kaleidoscope}
-		{imageSrc}
-		{segments}
-		{mode}
-		{scaleFactor}
-		{motionFactor}
-		{opacity}
-		{imageAspect}
-	/>
+	<Kaleidoscope {imageSrc} {segments} {mode} {scaleFactor} {motionFactor} {opacity} {imageAspect} />
 {/if}
 
 <style>

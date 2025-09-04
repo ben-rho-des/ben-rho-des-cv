@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { onMount, onDestroy } from 'svelte';
 	import { browser } from '$app/environment';
 	import {
 		createOrthographicCamera,
@@ -18,13 +17,23 @@
 		SCROLL: 'scroll'
 	} as const;
 
-	export let imageSrc: string = '';
-	export let segments: number = DEFAULTS.SEGMENTS;
-	export let mode: 'static' | 'loop' | 'mouse' | 'scroll' = MODES.STATIC;
-	export let scaleFactor: number = DEFAULTS.SCALE_FACTOR;
-	export let motionFactor: number = DEFAULTS.MOTION_FACTOR;
-	export let opacity: number = DEFAULTS.OPACITY;
-	export let imageAspect: number = DEFAULTS.IMAGE_ASPECT;
+	const {
+		imageSrc = '',
+		segments = DEFAULTS.SEGMENTS,
+		mode = MODES.STATIC,
+		scaleFactor = DEFAULTS.SCALE_FACTOR,
+		motionFactor = DEFAULTS.MOTION_FACTOR,
+		opacity = DEFAULTS.OPACITY,
+		imageAspect = DEFAULTS.IMAGE_ASPECT
+	} = $props<{
+		imageSrc?: string;
+		segments?: number;
+		mode?: 'static' | 'loop' | 'mouse' | 'scroll';
+		scaleFactor?: number;
+		motionFactor?: number;
+		opacity?: number;
+		imageAspect?: number;
+	}>();
 
 	let containerElement: HTMLElement;
 	let scene: import('three').Scene;
@@ -33,11 +42,11 @@
 	let material: import('three').ShaderMaterial;
 	let geometry: import('three').PlaneGeometry;
 	let plane: import('three').Mesh;
-	let mouse = { x: 0, y: 0 };
-	let isPlaying = true;
+	const mouse = $state({ x: 0, y: 0 });
+	const isPlaying = $state(true);
 	let lastTime = performance.now() / 1000;
 	let animationId: number;
-	let webglSupported = true;
+	let webglSupported = $state(true);
 	let texture: import('three').Texture;
 	let THREE: typeof import('three');
 
@@ -105,23 +114,25 @@
 		}
 	`;
 
-	onMount(async () => {
+	$effect(() => {
 		if (browser) {
 			webglSupported = isWebGLSupported();
 			if (webglSupported) {
 				// Dynamically import Three.js
-				THREE = await import('three');
-				initThreeJS();
-				setupEventListeners();
-				startRenderLoop();
+				import('three').then((THREE_MODULE) => {
+					THREE = THREE_MODULE;
+					initThreeJS();
+					setupEventListeners();
+					startRenderLoop();
+				});
 			}
 		}
-	});
 
-	onDestroy(() => {
-		if (browser) {
-			cleanup();
-		}
+		return () => {
+			if (browser) {
+				cleanup();
+			}
+		};
 	});
 
 	function initThreeJS(): void {
@@ -292,12 +303,14 @@
 		window.removeEventListener('resize', handleResize);
 	}
 
-	$: if (material) {
-		material.uniforms.segments.value = segments;
-		material.uniforms.uScaleFactor.value = scaleFactor;
-		material.uniforms.uOpacity.value = opacity;
-		material.uniforms.uImageAspect.value = imageAspect;
-	}
+	$effect(() => {
+		if (material) {
+			material.uniforms.segments.value = segments;
+			material.uniforms.uScaleFactor.value = scaleFactor;
+			material.uniforms.uOpacity.value = opacity;
+			material.uniforms.uImageAspect.value = imageAspect;
+		}
+	});
 </script>
 
 {#if webglSupported}

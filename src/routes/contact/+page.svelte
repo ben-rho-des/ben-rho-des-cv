@@ -1,6 +1,8 @@
-<script context="module" lang="ts">
+<script lang="ts" module>
 	export const prerender = true;
+</script>
 
+<script lang="ts">
 	let formData: ContactFormData = {
 		name: '',
 		email: '',
@@ -90,15 +92,11 @@
 		}
 	}
 
-	onMount(() => {
-		formData = { name: '', email: '', message: '', website: '' };
-	});
-</script>
+	// Initialize form data
+	formData = { name: '', email: '', message: '', website: '' };
 
-<script lang="ts">
 	import PageTitle from '$lib/components/PageTitle.svelte';
 	import LoadingSpinner from '$lib/components/LoadingSpinner.svelte';
-	import { onMount } from 'svelte';
 	import type { ContactFormData, FormState } from '$lib/types';
 	import { validateContactForm } from '$lib/utils/validation';
 	import { logError, createUserFriendlyError, NetworkError } from '$lib/utils/error-handling';
@@ -153,7 +151,7 @@
 			action={BUILD_TARGET === 'netlify' ? '/' : FORMSPREE_ENDPOINT}
 			data-netlify={BUILD_TARGET === 'netlify' ? 'true' : undefined}
 			name={BUILD_TARGET === 'netlify' ? 'contact' : undefined}
-			on:submit={handleSubmit}
+			onsubmit={handleSubmit}
 			class="space-y-6"
 		>
 			<!-- Netlify Forms hidden input -->

@@ -1,7 +1,5 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { derived } from 'svelte/store';
-	import { onMount } from 'svelte';
 	import { modeStore } from '$lib/stores/mode';
 	import PlayButton from '$lib/components/icons/PlayButton.svelte';
 	import DisplayGrid from '$lib/components/icons/DisplayGrid.svelte';
@@ -14,7 +12,7 @@
 		{ href: 'about', label: 'About' }
 	];
 
-	const currentPath = derived(page, ($p) => $p.url.pathname);
+	const currentPath = $derived($page.url.pathname);
 	const isActive = (path: string, current: string) => {
 		if (typeof current !== 'string') return false;
 		const normalizedPath = path.startsWith('/') ? path.slice(1) : path;
@@ -24,8 +22,8 @@
 
 	let header: HTMLElement;
 	let mobileMenuContent: HTMLElement;
-	let isScrolled = false;
-	let isMobileMenuOpen = false;
+	let isScrolled = $state(false);
+	let isMobileMenuOpen = $state(false);
 	let focusTrapCleanup: (() => void) | null = null;
 
 	function toggleTheme() {
@@ -60,7 +58,7 @@
 		}
 	}
 
-	onMount(() => {
+	$effect(() => {
 		modeStore.init();
 
 		const scrollHandler = () => {
@@ -126,7 +124,7 @@
 			{#each right as item (item.href)}
 				<a
 					href={item.href}
-					class:is-active-route={isActive(item.href, $currentPath)}
+					class:is-active-route={isActive(item.href, currentPath)}
 					on:click={closeMobileMenu}>{item.label}</a
 				>
 			{/each}
@@ -183,7 +181,7 @@
 					{#each right as item (item.href)}
 						<a
 							href={item.href}
-							class:is-active-route={isActive(item.href, $currentPath)}
+							class:is-active-route={isActive(item.href, currentPath)}
 							on:click={closeMobileMenu}>{item.label}</a
 						>
 					{/each}

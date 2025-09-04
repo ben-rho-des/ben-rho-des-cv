@@ -7,7 +7,15 @@
 	import Grid from '$lib/components/Grid.svelte';
 	import { modeStore } from '$lib/stores/mode';
 
-	$: isHomePage = $page.url.pathname === '/' || $page.url.pathname === '/ben-rho-des-cv/';
+	const isHomePage = $derived(
+		$page.url.pathname === '/' || $page.url.pathname === '/ben-rho-des-cv/'
+	);
+
+	interface Props {
+		children: import('svelte').Snippet;
+	}
+
+	const { children }: Props = $props();
 </script>
 
 <Header />
@@ -19,7 +27,7 @@
 		{#if $modeStore.grid}
 			<Grid />
 		{/if}
-		<slot />
+		{@render children()}
 	</main>
 </ErrorBoundary>
 

@@ -1,14 +1,16 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import { logError, createUserFriendlyError } from '$lib/utils/error-handling';
 	import PageTitle from '$lib/components/PageTitle.svelte';
 
-	export let showDetails: boolean = false;
+	const { showDetails = false, children } = $props<{
+		showDetails?: boolean;
+		children: import('svelte').Snippet;
+	}>();
 
-	let hasError = false;
-	let error: Error | null = null;
+	let hasError = $state(false);
+	let error = $state<Error | null>(null);
 
-	onMount(() => {
+	$effect(() => {
 		const handleError = (event: ErrorEvent) => {
 			hasError = true;
 			error = event.error;
@@ -76,5 +78,5 @@
 		</div>
 	</main>
 {:else}
-	<slot />
+	{@render children()}
 {/if}
