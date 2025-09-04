@@ -167,7 +167,7 @@
 					required
 					aria-required="true"
 					aria-invalid={submitStatus === 'error' && !formData.name}
-					class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-3 py-3 focus:ring-2 focus:outline-none"
+					class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-3 py-3 focus:outline-none focus:ring-2"
 				/>
 			</div>
 
@@ -182,7 +182,7 @@
 					required
 					aria-required="true"
 					aria-invalid={submitStatus === 'error' && !formData.email}
-					class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-3 py-3 focus:ring-2 focus:outline-none"
+					class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-3 py-3 focus:outline-none focus:ring-2"
 				/>
 			</div>
 
@@ -197,7 +197,7 @@
 					aria-required="true"
 					aria-invalid={submitStatus === 'error' && !formData.message}
 					rows="5"
-					class="focus:border-primary focus:ring-primary/20 w-full resize-y rounded-lg border border-gray-300 px-3 py-3 focus:ring-2 focus:outline-none"
+					class="focus:border-primary focus:ring-primary/20 w-full resize-y rounded-lg border border-gray-300 px-3 py-3 focus:outline-none focus:ring-2"
 				></textarea>
 			</div>
 

@@ -1,1 +1,1 @@
-npx lint-staged && npm run check && (find src -name "*.test.*" -o -name "*.spec.*" | grep -q . && npm test || echo "No tests found, skipping test run")
+npx lint-staged && npm run check

@@ -77,8 +77,16 @@
 			<button class="action-btn" on:click={toggleTheme} aria-label="Toggle theme">
 				{$modeStore.theme === '🌚' ? '🌞' : '🌚'}
 			</button>
-			<a href="playlists" class="action-btn" aria-label="Go to playlists"> 🥁 </a>
-			<button class="action-btn" on:click={toggleGrid} aria-label="Toggle grid"> 📦 </button>
+			<a href="playlists" class="action-btn" aria-label="Go to playlists">
+				<i class="gg-play-button"></i>
+			</a>
+			<button class="action-btn" on:click={toggleGrid} aria-label="Toggle grid">
+				{#if $modeStore.grid}
+					<i class="gg-square"></i>
+				{:else}
+					<i class="gg-display-grid"></i>
+				{/if}
+			</button>
 		</div>
 
 		<nav class="nav" aria-label="Primary navigation">
@@ -126,8 +134,16 @@
 					<button class="action-btn" on:click={toggleTheme} aria-label="Toggle theme">
 						{$modeStore.theme === '🌚' ? '🌞' : '🌚'}
 					</button>
-					<a href="/playlists" class="action-btn" aria-label="Go to playlists"> 🥁 </a>
-					<button class="action-btn" on:click={toggleGrid} aria-label="Toggle grid"> 📦 </button>
+					<a href="playlists" class="action-btn" aria-label="Go to playlists">
+						<i class="gg-play-button"></i>
+					</a>
+					<button class="action-btn" on:click={toggleGrid} aria-label="Toggle grid">
+						{#if $modeStore.grid}
+							<i class="gg-square"></i>
+						{:else}
+							<i class="gg-display-grid"></i>
+						{/if}
+					</button>
 				</div>
 
 				<!-- Mobile navigation -->

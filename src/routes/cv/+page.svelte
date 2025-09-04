@@ -5,11 +5,14 @@
 <div class="grid grid-cols-6 gap-x-5">
 	<PageTitle title="Curriculum Vitae">
 		<a
-			class="bubble display-font-alt self-center text-2xl uppercase"
+			class="bubble display-font-alt flex items-center gap-2 self-center text-2xl uppercase"
 			target="_blank"
 			rel="noopener"
-			href="ben-rho-des-cv-2025.pdf">Download pdf</a
+			href="ben-rho-des-cv-2025.pdf"
 		>
+			<i class="gg-file-document"></i>
+			Download pdf
+		</a>
 	</PageTitle>
 
 	<section class="col-span-6">

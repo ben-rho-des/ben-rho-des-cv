@@ -17,4 +17,4 @@
 	<slot />
 </main>
 
-<footer class="container mt-6 w-300 text-center">© {new Date().getFullYear()} Ben-Rho-des</footer>
+<footer class="w-300 container mt-6 text-center">© {new Date().getFullYear()} Ben-Rho-des</footer>

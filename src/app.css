@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/typography';
+@import '$lib/css-gg-icons.css';
 
 /* Custom dark mode variant using mode-🌚 class */
 @custom-variant dark (&:where(.mode-🌚, .mode-🌚 *));

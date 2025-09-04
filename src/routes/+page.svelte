@@ -72,7 +72,7 @@
 	<title>Ben-rho-des cv website</title>
 </svelte:head>
 
-<div class="fixed top-0 left-0 z-0 m-0 h-screen w-screen overflow-hidden p-0 font-sans">
+<div class="fixed left-0 top-0 z-0 m-0 h-screen w-screen overflow-hidden p-0 font-sans">
 	<div class="relative h-screen w-screen overflow-hidden">
 		<Kaleidoscope
 			{imageSrc}
@@ -90,11 +90,16 @@
 	<h1 class="hero-font display-font text-20xl text-center uppercase" data-text={selectedTitle}>
 		{selectedTitle}
 	</h1>
-	<div class="display-font-alt bubble text-center text-3xl uppercase">gl+hf</div>
+	<div
+		class="display-font-alt bubble flex items-center justify-center gap-2 text-center text-3xl uppercase"
+	>
+		<i class="gg-hello"></i>
+		gl+hf
+	</div>
 </div>
 {#if showControls}
 	<div
-		class="absolute top-30 left-1/2 z-[100] grid max-w-4xl -translate-x-1/2 transform grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4 rounded-lg bg-[var(--bg)] p-4 backdrop-blur-md"
+		class="top-30 absolute left-1/2 z-[100] grid max-w-4xl -translate-x-1/2 transform grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4 rounded-lg bg-[var(--bg)] p-4 backdrop-blur-md"
 	>
 		<div class="flex flex-col gap-2">
 			<label for="segments" class="text-sm font-medium text-[var(--fg)]">Segments: {segments}</label
