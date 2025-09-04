@@ -6,6 +6,8 @@
 	import PlayButton from '$lib/components/icons/PlayButton.svelte';
 	import DisplayGrid from '$lib/components/icons/DisplayGrid.svelte';
 	import Square from '$lib/components/icons/Square.svelte';
+	import { trapFocus } from '$lib/utils/accessibility';
+	import { THEMES } from '$lib/constants';
 
 	const right = [
 		{ href: 'cv', label: 'Curriculum Vitae' },
@@ -21,8 +23,10 @@
 	};
 
 	let header: HTMLElement;
+	let mobileMenuContent: HTMLElement;
 	let isScrolled = false;
 	let isMobileMenuOpen = false;
+	let focusTrapCleanup: (() => void) | null = null;
 
 	function toggleTheme() {
 		modeStore.toggleTheme();
@@ -34,10 +38,26 @@
 
 	function toggleMobileMenu() {
 		isMobileMenuOpen = !isMobileMenuOpen;
+		if (isMobileMenuOpen && mobileMenuContent) {
+			// Focus the first focusable element in the menu
+			const firstFocusable = mobileMenuContent.querySelector(
+				'button, a, [tabindex]:not([tabindex="-1"])'
+			) as HTMLElement;
+			firstFocusable?.focus();
+			// Set up focus trap
+			focusTrapCleanup = trapFocus(mobileMenuContent);
+		} else if (!isMobileMenuOpen && focusTrapCleanup) {
+			focusTrapCleanup();
+			focusTrapCleanup = null;
+		}
 	}
 
 	function closeMobileMenu() {
 		isMobileMenuOpen = false;
+		if (focusTrapCleanup) {
+			focusTrapCleanup();
+			focusTrapCleanup = null;
+		}
 	}
 
 	onMount(() => {
@@ -64,6 +84,10 @@
 			document.removeEventListener('scroll', scrollHandler, { capture: true });
 			document.documentElement.removeEventListener('scroll', scrollHandler, { capture: true });
 			document.body.removeEventListener('scroll', scrollHandler, { capture: true });
+			// Clean up focus trap if it exists
+			if (focusTrapCleanup) {
+				focusTrapCleanup();
+			}
 		};
 	});
 </script>
@@ -71,14 +95,14 @@
 <header class="header" class:scrolled={isScrolled} bind:this={header}>
 	<div class="header-inner container">
 		<a class="logo" href="." aria-label="Go to homepage">
-			<img src={$modeStore.theme === '🌚' ? 'brd-dark.svg' : 'brd.svg'} alt="Ben Logo" />
+			<img src={$modeStore.theme === THEMES.DARK ? 'brd-dark.svg' : 'brd.svg'} alt="Ben Logo" />
 		</a>
 
 		<h2 class="header-title w-400">Melbourne Based Fullstack Developer</h2>
 
 		<div class="header-actions">
 			<button class="action-btn" on:click={toggleTheme} aria-label="Toggle theme">
-				{$modeStore.theme === '🌚' ? '🌞' : '🌚'}
+				{$modeStore.theme === THEMES.DARK ? THEMES.LIGHT : THEMES.DARK}
 			</button>
 			<a href="playlists" class="action-btn" aria-label="Go to playlists">
 				<PlayButton size={24} />
@@ -119,9 +143,7 @@
 			class="mobile-menu-overlay"
 			on:click={closeMobileMenu}
 			on:keydown={(e) => e.key === 'Escape' && closeMobileMenu()}
-			role="button"
-			tabindex="0"
-			aria-label="Close mobile menu"
+			aria-hidden="true"
 		>
 			<div
 				class="mobile-menu-content"
@@ -130,12 +152,13 @@
 				role="dialog"
 				aria-modal="true"
 				aria-label="Mobile navigation menu"
-				tabindex="0"
+				tabindex="-1"
+				bind:this={mobileMenuContent}
 			>
 				<!-- Mobile action buttons -->
 				<div class="mobile-actions">
 					<button class="action-btn" on:click={toggleTheme} aria-label="Toggle theme">
-						{$modeStore.theme === '🌚' ? '🌞' : '🌚'}
+						{$modeStore.theme === THEMES.DARK ? THEMES.LIGHT : THEMES.DARK}
 					</button>
 					<a href="playlists" class="action-btn" aria-label="Go to playlists">
 						<PlayButton size={20} />
@@ -300,8 +323,8 @@
 		transition: all 0.2s ease;
 		align-items: center;
 		justify-content: center;
-		min-width: 3rem;
-		min-height: 3rem;
+		min-width: 3.1rem;
+		min-height: 3.1rem;
 		outline: none;
 		grid-column: 6;
 		justify-self: end;

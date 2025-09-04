@@ -1,4 +1,5 @@
 // Accessibility utilities
+const FOCUS_TRAP_CLEANUP_DURATION = 1000;
 export function prefersReducedMotion(): boolean {
 	if (typeof window === 'undefined') return false;
 	return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -21,7 +22,7 @@ export function announceToScreenReader(message: string): void {
 
 	setTimeout(() => {
 		document.body.removeChild(announcement);
-	}, 1000);
+	}, FOCUS_TRAP_CLEANUP_DURATION);
 }
 
 export function trapFocus(element: HTMLElement): () => void {

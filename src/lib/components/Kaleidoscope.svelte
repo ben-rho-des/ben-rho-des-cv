@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
 	import { browser } from '$app/environment';
-	import * as THREE from 'three';
 	import {
 		createOrthographicCamera,
 		createWebGLRenderer,
@@ -9,28 +8,38 @@
 		cleanupThreeResources,
 		isWebGLSupported
 	} from '$lib/utils/three-helpers';
+	import { DEFAULTS } from '$lib/constants';
+
+	// Kaleidoscope-specific constants
+	const MODES = {
+		STATIC: 'static',
+		LOOP: 'loop',
+		MOUSE: 'mouse',
+		SCROLL: 'scroll'
+	} as const;
 
 	export let imageSrc: string = '';
-	export let segments: number = 6;
-	export let mode: 'static' | 'loop' | 'mouse' | 'scroll' = 'static';
-	export let scaleFactor: number = 1;
-	export let motionFactor: number = 1;
-	export let opacity: number = 1;
-	export let imageAspect: number = 1;
+	export let segments: number = DEFAULTS.SEGMENTS;
+	export let mode: 'static' | 'loop' | 'mouse' | 'scroll' = MODES.STATIC;
+	export let scaleFactor: number = DEFAULTS.SCALE_FACTOR;
+	export let motionFactor: number = DEFAULTS.MOTION_FACTOR;
+	export let opacity: number = DEFAULTS.OPACITY;
+	export let imageAspect: number = DEFAULTS.IMAGE_ASPECT;
 
 	let containerElement: HTMLElement;
-	let scene: THREE.Scene;
-	let camera: THREE.OrthographicCamera;
-	let renderer: THREE.WebGLRenderer;
-	let material: THREE.ShaderMaterial;
-	let geometry: THREE.PlaneGeometry;
-	let plane: THREE.Mesh;
+	let scene: import('three').Scene;
+	let camera: import('three').OrthographicCamera;
+	let renderer: import('three').WebGLRenderer;
+	let material: import('three').ShaderMaterial;
+	let geometry: import('three').PlaneGeometry;
+	let plane: import('three').Mesh;
 	let mouse = { x: 0, y: 0 };
 	let isPlaying = true;
 	let lastTime = performance.now() / 1000;
 	let animationId: number;
 	let webglSupported = true;
-	let texture: THREE.Texture;
+	let texture: import('three').Texture;
+	let THREE: typeof import('three');
 
 	const vertexShader = `
 		varying vec2 vUv;
@@ -96,10 +105,12 @@
 		}
 	`;
 
-	onMount(() => {
+	onMount(async () => {
 		if (browser) {
 			webglSupported = isWebGLSupported();
 			if (webglSupported) {
+				// Dynamically import Three.js
+				THREE = await import('three');
 				initThreeJS();
 				setupEventListeners();
 				startRenderLoop();
@@ -126,7 +137,7 @@
 
 		texture = loadTexture(
 			imageSrc,
-			(loadedTexture: THREE.Texture) => {
+			(loadedTexture: import('three').Texture) => {
 				console.log('Texture loaded successfully');
 				texture = loadedTexture;
 			},

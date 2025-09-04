@@ -1,10 +1,11 @@
 import { writable } from 'svelte/store';
 import { browser } from '$app/environment';
 import type { Mode, ModeState, Theme } from '../types';
+import { THEMES, DEFAULTS, CSS_CLASSES } from '../constants';
 
 const initialState: ModeState = {
-	theme: '🌞',
-	grid: false
+	theme: DEFAULTS.THEME,
+	grid: DEFAULTS.GRID_ENABLED
 };
 
 function createModeStore() {
@@ -20,8 +21,8 @@ function createModeStore() {
 			const savedGrid = localStorage.getItem('grid') === 'true';
 
 			const state: ModeState = {
-				theme: (savedTheme as Theme) || '🌞',
-				grid: savedGrid || false
+				theme: (savedTheme as Theme) || DEFAULTS.THEME,
+				grid: savedGrid || DEFAULTS.GRID_ENABLED
 			};
 
 			set(state);
@@ -30,7 +31,7 @@ function createModeStore() {
 
 		toggleTheme: () => {
 			update((state) => {
-				const newTheme: Mode = state.theme === '🌞' ? '🌚' : '🌞';
+				const newTheme: Mode = state.theme === THEMES.LIGHT ? THEMES.DARK : THEMES.LIGHT;
 				const newState = { ...state, theme: newTheme };
 
 				if (browser) {
@@ -83,15 +84,15 @@ function applyToBody(state: ModeState) {
 
 	const body = document.body;
 
-	body.classList.remove('mode-🌞', 'mode-🌚', 'mode-🫥', 'dark');
-	body.classList.add(`mode-${state.theme}`);
+	body.classList.remove(CSS_CLASSES.LIGHT_MODE, CSS_CLASSES.DARK_MODE, CSS_CLASSES.GRID_MODE);
+	body.classList.add(`${CSS_CLASSES.MODE_PREFIX}${state.theme}`);
 
-	if (state.theme === '🌚') {
-		body.classList.add('mode-🌚');
+	if (state.theme === THEMES.DARK) {
+		body.classList.add(CSS_CLASSES.DARK_MODE);
 	}
 
 	if (state.grid) {
-		body.classList.add('mode-🫥');
+		body.classList.add(CSS_CLASSES.GRID_MODE);
 	}
 }
 

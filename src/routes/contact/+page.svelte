@@ -1,10 +1,5 @@
-<script lang="ts">
-	import PageTitle from '$lib/components/PageTitle.svelte';
-	import LoadingSpinner from '$lib/components/LoadingSpinner.svelte';
-	import { onMount } from 'svelte';
-	import type { ContactFormData, FormState } from '$lib/types';
-	import { validateContactForm } from '$lib/utils/validation';
-	import { logError, createUserFriendlyError, NetworkError } from '$lib/utils/error-handling';
+<script context="module" lang="ts">
+	export const prerender = true;
 
 	let formData: ContactFormData = {
 		name: '',
@@ -98,6 +93,15 @@
 	onMount(() => {
 		formData = { name: '', email: '', message: '', website: '' };
 	});
+</script>
+
+<script lang="ts">
+	import PageTitle from '$lib/components/PageTitle.svelte';
+	import LoadingSpinner from '$lib/components/LoadingSpinner.svelte';
+	import { onMount } from 'svelte';
+	import type { ContactFormData, FormState } from '$lib/types';
+	import { validateContactForm } from '$lib/utils/validation';
+	import { logError, createUserFriendlyError, NetworkError } from '$lib/utils/error-handling';
 </script>
 
 <div class="grid grid-cols-6 gap-x-5">

@@ -4,6 +4,20 @@
 	import { browser } from '$app/environment';
 	import { tweened } from 'svelte/motion';
 	import { getReducedMotionDuration } from '$lib/utils/accessibility';
+	import { DEFAULTS } from '$lib/constants';
+
+	// Kaleidoscope-specific constants
+	const MODES = {
+		STATIC: 'static',
+		LOOP: 'loop',
+		MOUSE: 'mouse',
+		SCROLL: 'scroll'
+	} as const;
+
+	// Animation durations (in milliseconds)
+	const ANIMATION_DURATIONS = {
+		IMAGE_ASPECT_CYCLE: 13000
+	} as const;
 
 	const titleOptions = [
 		'end times thin hope',
@@ -23,15 +37,15 @@
 		'owe.png'
 	];
 
-	let mode: 'static' | 'loop' | 'mouse' | 'scroll' = 'loop';
+	let mode: 'static' | 'loop' | 'mouse' | 'scroll' = MODES.LOOP;
 	let segments = 8;
-	let scaleFactor = 1;
-	let motionFactor = 1;
-	let opacity = 1;
+	let scaleFactor = DEFAULTS.SCALE_FACTOR;
+	let motionFactor = DEFAULTS.MOTION_FACTOR;
+	let opacity = DEFAULTS.OPACITY;
 	let showControls = false;
 
 	const imageAspect = tweened(0.5, {
-		duration: getReducedMotionDuration(13000),
+		duration: getReducedMotionDuration(ANIMATION_DURATIONS.IMAGE_ASPECT_CYCLE),
 		easing: (t) => 0.5 * (1 + Math.sin(t * Math.PI))
 	});
 
@@ -52,7 +66,7 @@
 	});
 
 	function startImageAspectAnimation(): void {
-		const duration = getReducedMotionDuration(13000);
+		const duration = getReducedMotionDuration(ANIMATION_DURATIONS.IMAGE_ASPECT_CYCLE);
 		if (duration === 0) return; // Skip animation if reduced motion is preferred
 
 		const animate = () => {

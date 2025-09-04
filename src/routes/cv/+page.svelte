@@ -1,3 +1,7 @@
+<script context="module" lang="ts">
+	export const prerender = true;
+</script>
+
 <script lang="ts">
 	import PageTitle from '$lib/components/PageTitle.svelte';
 	import FileDocument from '$lib/components/icons/FileDocument.svelte';
