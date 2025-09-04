@@ -6,7 +6,7 @@
 	<PageTitle title="Playlists 🥁" />
 	<p class="col-span-6 mb-8 text-lg text-gray-600">Magical music to code to</p>
 	<div class="col-span-2">
-		<h3 class="text-primary mb-3 text-xl font-semibold">Mix</h3>
+		<h3 class="mb-3 text-xl font-semibold text-primary">Mix</h3>
 		<iframe
 			style="border-radius:12px"
 			src="https://open.spotify.com/embed/playlist/2STmI6S6MunTzKCD64Ucs5"
@@ -21,7 +21,7 @@
 	</div>
 
 	<div class="col-span-2">
-		<h3 class="text-primary mb-3 text-xl font-semibold">Mix 2</h3>
+		<h3 class="mb-3 text-xl font-semibold text-primary">Mix 2</h3>
 		<iframe
 			style="border-radius:12px"
 			src="https://open.spotify.com/embed/playlist/2zxOACR4moKbJQtRpMX1Cb?utm_source=generator"
@@ -36,7 +36,7 @@
 	</div>
 
 	<div class="col-span-2">
-		<h3 class="text-primary mb-3 text-xl font-semibold">Most played this year</h3>
+		<h3 class="mb-3 text-xl font-semibold text-primary">Most played this year</h3>
 		<iframe
 			style="border-radius:12px"
 			src="https://open.spotify.com/embed/album/2OlRb9ISy8xZku7ImTV9n8"

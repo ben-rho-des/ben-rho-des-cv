@@ -19,7 +19,7 @@
 			</time>
 			<div class="mb-6 flex flex-wrap justify-center gap-3">
 				{#each post.tags as tag (tag)}
-					<span class="bg-primary rounded-full px-4 py-2 text-sm text-white">{tag}</span>
+					<span class="rounded-full bg-primary px-4 py-2 text-sm text-white">{tag}</span>
 				{/each}
 			</div>
 		</header>
@@ -29,14 +29,14 @@
 			{@html post.content}
 		</div>
 
-		<footer class="border-primary mt-12 border-t pt-8 text-center">
-			<a href="/blog" class="text-primary text-lg hover:underline">← Back to Blog</a>
+		<footer class="mt-12 border-t border-primary pt-8 text-center">
+			<a href="/blog" class="text-lg text-primary hover:underline">← Back to Blog</a>
 		</footer>
 	</article>
 {:else}
 	<div class="py-12 text-center">
 		<h1 class="mb-4 text-4xl font-bold">Post Not Found</h1>
 		<p class="mb-6 text-gray-600">The blog post you're looking for doesn't exist.</p>
-		<a href="/blog" class="text-primary text-lg hover:underline">← Back to Blog</a>
+		<a href="/blog" class="text-lg text-primary hover:underline">← Back to Blog</a>
 	</div>
 {/if}

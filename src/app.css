@@ -1,9 +1,46 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/typography';
-@import '$lib/css-gg-icons.css';
 
-/* Custom dark mode variant using mode-🌚 class */
 @custom-variant dark (&:where(.mode-🌚, .mode-🌚 *));
+
+@theme {
+	--color-primary: var(--primary);
+	--color-secondary: var(--secondary);
+	--color-fg: var(--fg);
+	--color-bg: var(--bg);
+	--color-hero-text: var(--hero-text-color);
+	--color-header-bg: var(--header-bg);
+	--color-header-scrolled-stroke: var(--header-scrolled-stroke);
+	--color-primary-muted: var(--primary-muted);
+	--color-border: var(--border);
+
+	--font-family-display: var(--display-font);
+
+	--font-size-xs: var(--font-size-xs);
+	--font-size-sm: var(--font-size-sm);
+	--font-size-base: var(--font-size-base);
+	--font-size-lg: var(--font-size-lg);
+	--font-size-xl: var(--font-size-xl);
+	--font-size-2xl: var(--font-size-2xl);
+	--font-size-3xl: var(--font-size-3xl);
+	--font-size-4xl: var(--font-size-4xl);
+	--font-size-5xl: var(--font-size-5xl);
+	--font-size-6xl: var(--font-size-6xl);
+	--font-size-7xl: var(--font-size-7xl);
+	--font-size-8xl: var(--font-size-8xl);
+	--font-size-9xl: var(--font-size-9xl);
+	--font-size-10xl: var(--font-size-10xl);
+	--font-size-20xl: var(--font-size-20xl);
+
+	--line-height-tight: var(--line-height-tight);
+	--line-height-snug: var(--line-height-snug);
+	--line-height-normal: var(--line-height-normal);
+	--line-height-relaxed: var(--line-height-relaxed);
+	--line-height-loose: var(--line-height-loose);
+
+	--max-width: var(--max-width);
+	--spacing-column-gap: var(--column-gap);
+}
 
 :root {
 	--fg: rgb(77, 9, 13);
@@ -317,19 +354,3 @@ a:focus {
 }
 
 /* Main element styling */
-main {
-	width: 100%;
-	max-width: var(--max-width);
-	margin: 0 auto;
-}
-
-/* Main content spacing for fixed header */
-.main-content {
-	padding-top: 80px; /* Adjust based on header height */
-	min-height: 80vh;
-}
-
-footer {
-	border-top: 1px solid var(--fg);
-	padding: 24px 0;
-}

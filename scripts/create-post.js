@@ -9,7 +9,6 @@ const __dirname = path.dirname(__filename);
 
 const postsDir = path.join(__dirname, '../src/routes/blog/posts');
 
-// Get command line arguments
 const args = process.argv.slice(2);
 const title = args[0];
 const date = args[1] || new Date().toISOString().split('T')[0];
@@ -20,7 +19,6 @@ if (!title) {
 	process.exit(1);
 }
 
-// Create slug from title
 const slug = title
 	.toLowerCase()
 	.replace(/[^a-z0-9\s-]/g, '')
@@ -30,7 +28,6 @@ const slug = title
 const filename = `${slug}.mdx`;
 const filepath = path.join(postsDir, filename);
 
-// Create frontmatter and content
 const content = `---
 title: "${title}"
 date: "${date}"
@@ -59,18 +56,15 @@ Wrap up your thoughts.
 *Written with ❤️ and ☕*
 `;
 
-// Ensure posts directory exists
 if (!fs.existsSync(postsDir)) {
 	fs.mkdirSync(postsDir, { recursive: true });
 }
 
-// Check if file already exists
 if (fs.existsSync(filepath)) {
 	console.error(`Error: Post "${filename}" already exists!`);
 	process.exit(1);
 }
 
-// Write the file
 try {
 	fs.writeFileSync(filepath, content);
 	console.log(`✅ Created new blog post: ${filename}`);

@@ -1,11 +1,4 @@
-export interface BlogPost {
-	title: string;
-	date: string;
-	excerpt: string;
-	tags: string[];
-	slug: string;
-	content: string;
-}
+import type { BlogPost } from './types';
 
 import blogPosts from './blog-posts.json';
 

@@ -3,6 +3,9 @@
 	import { derived } from 'svelte/store';
 	import { onMount } from 'svelte';
 	import { modeStore } from '$lib/stores/mode';
+	import PlayButton from '$lib/components/icons/PlayButton.svelte';
+	import DisplayGrid from '$lib/components/icons/DisplayGrid.svelte';
+	import Square from '$lib/components/icons/Square.svelte';
 
 	const right = [
 		{ href: 'cv', label: 'Curriculum Vitae' },
@@ -78,13 +81,13 @@
 				{$modeStore.theme === '🌚' ? '🌞' : '🌚'}
 			</button>
 			<a href="playlists" class="action-btn" aria-label="Go to playlists">
-				<i class="gg-play-button"></i>
+				<PlayButton size={24} />
 			</a>
 			<button class="action-btn" on:click={toggleGrid} aria-label="Toggle grid">
 				{#if $modeStore.grid}
-					<i class="gg-square"></i>
+					<Square size={24} />
 				{:else}
-					<i class="gg-display-grid"></i>
+					<DisplayGrid size={24} />
 				{/if}
 			</button>
 		</div>
@@ -135,13 +138,13 @@
 						{$modeStore.theme === '🌚' ? '🌞' : '🌚'}
 					</button>
 					<a href="playlists" class="action-btn" aria-label="Go to playlists">
-						<i class="gg-play-button"></i>
+						<PlayButton size={20} />
 					</a>
 					<button class="action-btn" on:click={toggleGrid} aria-label="Toggle grid">
 						{#if $modeStore.grid}
-							<i class="gg-square"></i>
+							<Square size={20} />
 						{:else}
-							<i class="gg-display-grid"></i>
+							<DisplayGrid size={20} />
 						{/if}
 					</button>
 				</div>
@@ -234,8 +237,8 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		min-width: 3rem;
-		min-height: 3rem;
+		min-width: 3.1rem;
+		min-height: 3.1rem;
 		outline: none;
 	}
 

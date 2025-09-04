@@ -1,12 +1,6 @@
 import { writable } from 'svelte/store';
 import { browser } from '$app/environment';
-
-export type Mode = '🌞' | '🌚' | '🫥';
-
-interface ModeState {
-	theme: Mode;
-	grid: boolean;
-}
+import type { Mode, ModeState, Theme } from '../types';
 
 const initialState: ModeState = {
 	theme: '🌞',
@@ -26,7 +20,7 @@ function createModeStore() {
 			const savedGrid = localStorage.getItem('grid') === 'true';
 
 			const state: ModeState = {
-				theme: savedTheme || '🌞',
+				theme: (savedTheme as Theme) || '🌞',
 				grid: savedGrid || false
 			};
 

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import PageTitle from '$lib/components/PageTitle.svelte';
+	import FileDocument from '$lib/components/icons/FileDocument.svelte';
 </script>
 
 <div class="grid grid-cols-6 gap-x-5">
@@ -10,14 +11,14 @@
 			rel="noopener"
 			href="ben-rho-des-cv-2025.pdf"
 		>
-			<i class="gg-file-document"></i>
+			<FileDocument size={24} />
 			Download pdf
 		</a>
 	</PageTitle>
 
 	<section class="col-span-6">
-		<h2 class="text-primary mb-4 text-2xl font-semibold">About</h2>
-		<p class="text-secondary mb-4 text-lg">
+		<h2 class="mb-4 text-2xl font-semibold text-primary">About</h2>
+		<p class="mb-4 text-lg text-secondary">
 			Seeking my next opportunity as a full stack developer in a remote or hybrid role (1-2 days on
 			site near Southern Cross).
 		</p>
@@ -40,14 +41,14 @@
 				></span
 			>
 		</p>
-		<div class="bg-secondary mb-8 h-px opacity-25"></div>
+		<div class="mb-8 h-px bg-secondary opacity-25"></div>
 	</section>
 
 	<section class="col-span-3">
-		<h2 class="text-primary mb-6 text-2xl font-semibold">Work Experience</h2>
+		<h2 class="mb-6 text-2xl font-semibold text-primary">Work Experience</h2>
 
 		<article class="mb-8">
-			<h3 class="text-secondary mb-2 text-lg font-semibold">
+			<h3 class="mb-2 text-lg font-semibold text-secondary">
 				Senior Frontend Developer · Connective
 			</h3>
 			<div class="mb-2 italic">Permanent · Jan 2025 — Present</div>
@@ -70,7 +71,7 @@
 		</article>
 
 		<article class="mb-8">
-			<h3 class="text-secondary mb-2 text-lg font-semibold">
+			<h3 class="mb-2 text-lg font-semibold text-secondary">
 				Lead Full-Stack Developer · Ingenovis Health
 			</h3>
 			<div class="mb-2 italic">Permanent · Sep 2021 — Jan 2025</div>
@@ -113,7 +114,7 @@
 		</article>
 
 		<article class="mb-8">
-			<h3 class="text-secondary mb-2 text-lg font-semibold">
+			<h3 class="mb-2 text-lg font-semibold text-secondary">
 				Senior Full-Stack Developer · NAB (National Australia Bank)
 			</h3>
 			<div class="mb-2 italic">Permanent 2018 — 2021 · Contractor 2016 — 2018</div>
@@ -144,7 +145,7 @@
 		</article>
 
 		<article class="mb-8">
-			<h3 class="text-secondary mb-2 text-lg font-semibold">
+			<h3 class="mb-2 text-lg font-semibold text-secondary">
 				Front-End Developer · Australian Financial Review (Fairfax Media)
 			</h3>
 			<div class="mb-4 italic">Permanent · 2014 — 2016</div>
@@ -165,16 +166,16 @@
 	</section>
 
 	<aside class="col-span-3">
-		<h2 class="text-primary mb-6 text-2xl font-semibold">Education & Certs</h2>
+		<h2 class="mb-6 text-2xl font-semibold text-primary">Education & Certs</h2>
 		<ul class="mb-4 space-y-2">
 			<li>AWS Associate Developer (2020)</li>
 			<li>Short Course, Digital Design — <em>Tractor</em> (2013–2014)</li>
 			<li>Advanced Diploma of Graphic Design — <em>St George College of Design</em> (2007–2010)</li>
 		</ul>
 
-		<div class="bg-secondary mb-6 h-px opacity-25"></div>
+		<div class="mb-6 h-px bg-secondary opacity-25"></div>
 
-		<h2 class="text-primary mb-6 text-xl font-semibold">Earlier Experience</h2>
+		<h2 class="mb-6 text-xl font-semibold text-primary">Earlier Experience</h2>
 		<article class="mb-4">
 			<h3 class="mb-2 text-lg font-semibold">Front-End Developer · Cobe Design</h3>
 			<div class="mb-2 italic">2012 — 2014</div>

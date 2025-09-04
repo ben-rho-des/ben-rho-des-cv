@@ -23,7 +23,7 @@
 				<p class="mb-4 leading-relaxed text-gray-700">{post.excerpt}</p>
 				<div class="flex flex-wrap gap-2">
 					{#each post.tags as tag (tag)}
-						<span class="bg-primary rounded-full px-3 py-1 text-sm text-white">{tag}</span>
+						<span class="rounded-full bg-primary px-3 py-1 text-sm text-white">{tag}</span>
 					{/each}
 				</div>
 			</article>

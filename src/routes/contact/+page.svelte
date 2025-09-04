@@ -1,31 +1,41 @@
 <script lang="ts">
 	import PageTitle from '$lib/components/PageTitle.svelte';
+	import LoadingSpinner from '$lib/components/LoadingSpinner.svelte';
 	import { onMount } from 'svelte';
+	import type { ContactFormData, FormState } from '$lib/types';
+	import { validateContactForm } from '$lib/utils/validation';
+	import { logError, createUserFriendlyError, NetworkError } from '$lib/utils/error-handling';
 
-	let formData = {
+	let formData: ContactFormData = {
 		name: '',
 		email: '',
 		message: '',
 		website: '' // honeypot
 	};
 
-	let isSubmitting = false;
-	let submitStatus: 'idle' | 'success' | 'error' = 'idle';
-	let statusMessage = '';
+	let formState: FormState = { status: 'idle' };
+	let validationErrors: string[] = [];
 
 	const FORMSPREE_ENDPOINT = 'https://formspree.io/f/REPLACE_ME';
 	const BUILD_TARGET = import.meta.env.VITE_BUILD_TARGET || 'formspree';
 
-	async function handleSubmit(event: Event) {
+	async function handleSubmit(event: Event): Promise<void> {
 		event.preventDefault();
 
 		if (formData.website) {
 			return;
 		}
 
-		isSubmitting = true;
-		submitStatus = 'idle';
-		statusMessage = '';
+		// Validate form data
+		const validation = validateContactForm(formData);
+		if (!validation.isValid) {
+			validationErrors = validation.errors;
+			formState = { status: 'error', message: 'Please fix the errors below.' };
+			return;
+		}
+
+		validationErrors = [];
+		formState = { status: 'loading' };
 
 		try {
 			if (BUILD_TARGET === 'netlify') {
@@ -42,12 +52,14 @@
 				});
 
 				if (response.ok) {
-					submitStatus = 'success';
-					statusMessage = "Message sent! I'll get back to you within 1-2 business days.";
+					formState = {
+						status: 'success',
+						message: "Message sent! I'll get back to you within 1-2 business days."
+					};
 					form.reset();
 					formData = { name: '', email: '', message: '', website: '' };
 				} else {
-					throw new Error('Submission failed');
+					throw new NetworkError('Submission failed', response.status);
 				}
 			} else {
 				const response = await fetch(FORMSPREE_ENDPOINT, {
@@ -65,19 +77,21 @@
 				});
 
 				if (response.ok) {
-					submitStatus = 'success';
-					statusMessage = "Message sent! I'll get back to you within 1-2 business days.";
+					formState = {
+						status: 'success',
+						message: "Message sent! I'll get back to you within 1-2 business days."
+					};
 					formData = { name: '', email: '', message: '', website: '' };
 				} else {
-					throw new Error('Submission failed');
+					throw new NetworkError('Submission failed', response.status);
 				}
 			}
 		} catch (error) {
-			console.error('Form submission error:', error);
-			submitStatus = 'error';
-			statusMessage = 'Something went wrong. Please try again or email me directly.';
-		} finally {
-			isSubmitting = false;
+			logError(error, 'Contact form submission');
+			formState = {
+				status: 'error',
+				message: createUserFriendlyError(error)
+			};
 		}
 	}
 
@@ -100,7 +114,7 @@
 			</div>
 
 			<div>
-				<h3 class="text-primary mb-4 text-xl font-semibold">Connect</h3>
+				<h3 class="mb-4 text-xl font-semibold text-primary">Connect</h3>
 				<ul class="space-y-3">
 					<li>
 						<a
@@ -166,8 +180,8 @@
 					bind:value={formData.name}
 					required
 					aria-required="true"
-					aria-invalid={submitStatus === 'error' && !formData.name}
-					class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-3 py-3 focus:outline-none focus:ring-2"
+					aria-invalid={formState.status === 'error' && !formData.name}
+					class="w-full rounded-lg border border-gray-300 px-3 py-3 focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
 				/>
 			</div>
 
@@ -181,8 +195,8 @@
 					bind:value={formData.email}
 					required
 					aria-required="true"
-					aria-invalid={submitStatus === 'error' && !formData.email}
-					class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-3 py-3 focus:outline-none focus:ring-2"
+					aria-invalid={formState.status === 'error' && !formData.email}
+					class="w-full rounded-lg border border-gray-300 px-3 py-3 focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
 				/>
 			</div>
 
@@ -195,32 +209,51 @@
 					bind:value={formData.message}
 					required
 					aria-required="true"
-					aria-invalid={submitStatus === 'error' && !formData.message}
+					aria-invalid={formState.status === 'error' && !formData.message}
 					rows="5"
-					class="focus:border-primary focus:ring-primary/20 w-full resize-y rounded-lg border border-gray-300 px-3 py-3 focus:outline-none focus:ring-2"
+					class="w-full resize-y rounded-lg border border-gray-300 px-3 py-3 focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
 				></textarea>
 			</div>
+
+			<!-- Validation errors -->
+			{#if validationErrors.length > 0}
+				<div class="validation-errors" role="alert">
+					<h3 class="error-title">Please fix the following errors:</h3>
+					<ul class="error-list">
+						{#each validationErrors as error (error)}
+							<li class="error-item">{error}</li>
+						{/each}
+					</ul>
+				</div>
+			{/if}
 
 			<!-- Submit button -->
 			<button
 				type="submit"
-				disabled={isSubmitting}
-				class="bg-primary hover:bg-primary/90 w-full rounded-lg px-8 py-4 font-semibold text-white transition-all hover:-translate-y-0.5 disabled:transform-none disabled:cursor-not-allowed disabled:opacity-60"
+				disabled={formState.status === 'loading'}
+				class="w-full rounded-lg bg-primary px-8 py-4 font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-primary/90 disabled:transform-none disabled:cursor-not-allowed disabled:opacity-60"
 				aria-live="polite"
 			>
-				{isSubmitting ? 'Sending...' : 'Send Message'}
+				{#if formState.status === 'loading'}
+					<LoadingSpinner size="small" message="" showMessage={false} />
+					Sending...
+				{:else}
+					Send Message
+				{/if}
 			</button>
 
 			<!-- Status message -->
-			{#if submitStatus !== 'idle'}
+			{#if formState.status !== 'idle'}
 				<div
-					class="rounded-lg p-4 font-medium {submitStatus === 'success'
+					class="rounded-lg p-4 font-medium {formState.status === 'success'
 						? 'border border-green-200 bg-green-100 text-green-800'
-						: 'border border-red-200 bg-red-100 text-red-800'}"
+						: formState.status === 'error'
+							? 'border border-red-200 bg-red-100 text-red-800'
+							: 'border border-blue-200 bg-blue-100 text-blue-800'}"
 					role="alert"
 					aria-live="polite"
 				>
-					{statusMessage}
+					{formState.status === 'success' || formState.status === 'error' ? formState.message : ''}
 				</div>
 			{/if}
 		</form>
@@ -233,6 +266,37 @@
 
 <!-- Responsive styles -->
 <style>
+	.validation-errors {
+		background: #fef2f2;
+		border: 1px solid #fecaca;
+		border-radius: 8px;
+		padding: 1rem;
+		margin-bottom: 1rem;
+	}
+
+	.error-title {
+		color: #dc2626;
+		font-size: 0.875rem;
+		font-weight: 600;
+		margin-bottom: 0.5rem;
+	}
+
+	.error-list {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+
+	.error-item {
+		color: #dc2626;
+		font-size: 0.875rem;
+		margin-bottom: 0.25rem;
+	}
+
+	.error-item:last-child {
+		margin-bottom: 0;
+	}
+
 	@media (max-width: 860px) {
 		.grid {
 			grid-template-columns: 1fr;

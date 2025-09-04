@@ -2,14 +2,21 @@
 	import { onMount, onDestroy } from 'svelte';
 	import { browser } from '$app/environment';
 	import * as THREE from 'three';
+	import {
+		createOrthographicCamera,
+		createWebGLRenderer,
+		loadTexture,
+		cleanupThreeResources,
+		isWebGLSupported
+	} from '$lib/utils/three-helpers';
 
-	export let imageSrc = '';
-	export let segments = 6;
-	export let mode = 'static';
-	export let scaleFactor = 1;
-	export let motionFactor = 1;
-	export let opacity = 1;
-	export let imageAspect = 1;
+	export let imageSrc: string = '';
+	export let segments: number = 6;
+	export let mode: 'static' | 'loop' | 'mouse' | 'scroll' = 'static';
+	export let scaleFactor: number = 1;
+	export let motionFactor: number = 1;
+	export let opacity: number = 1;
+	export let imageAspect: number = 1;
 
 	let containerElement: HTMLElement;
 	let scene: THREE.Scene;
@@ -22,6 +29,8 @@
 	let isPlaying = true;
 	let lastTime = performance.now() / 1000;
 	let animationId: number;
+	let webglSupported = true;
+	let texture: THREE.Texture;
 
 	const vertexShader = `
 		varying vec2 vUv;
@@ -89,9 +98,12 @@
 
 	onMount(() => {
 		if (browser) {
-			initThreeJS();
-			setupEventListeners();
-			startRenderLoop();
+			webglSupported = isWebGLSupported();
+			if (webglSupported) {
+				initThreeJS();
+				setupEventListeners();
+				startRenderLoop();
+			}
 		}
 	});
 
@@ -101,36 +113,23 @@
 		}
 	});
 
-	function initThreeJS() {
+	function initThreeJS(): void {
 		scene = new THREE.Scene();
 
-		camera = new THREE.OrthographicCamera(-0.5, 0.5, 0.5, -0.5, -1000, 1000);
-		camera.position.set(0, 0, 2);
+		camera = createOrthographicCamera();
 
-		renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-		renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-		renderer.setSize(containerElement.offsetWidth, containerElement.offsetHeight);
-		renderer.setClearColor(0xeeeeee, 1);
-		renderer.outputColorSpace = THREE.SRGBColorSpace;
+		renderer = createWebGLRenderer(
+			containerElement,
+			containerElement.offsetWidth,
+			containerElement.offsetHeight
+		);
 
-		renderer.domElement.style.position = 'absolute';
-		renderer.domElement.style.top = '0';
-		renderer.domElement.style.left = '0';
-		renderer.domElement.style.zIndex = '1';
-
-		// eslint-disable-next-line svelte/no-dom-manipulating
-		containerElement.appendChild(renderer.domElement);
-
-		const textureLoader = new THREE.TextureLoader();
-		const texture = textureLoader.load(
+		texture = loadTexture(
 			imageSrc,
-			(texture: THREE.Texture) => {
-				texture.minFilter = THREE.LinearFilter;
-				texture.generateMipmaps = false;
-				texture.wrapS = THREE.RepeatWrapping;
-				texture.wrapT = THREE.RepeatWrapping;
+			(loadedTexture: THREE.Texture) => {
+				console.log('Texture loaded successfully');
+				texture = loadedTexture;
 			},
-			undefined,
 			(error: unknown) => {
 				console.error('Error loading texture:', error);
 			}
@@ -263,22 +262,12 @@
 		render();
 	}
 
-	function cleanup() {
+	function cleanup(): void {
 		if (animationId) {
 			cancelAnimationFrame(animationId);
 		}
 
-		if (renderer) {
-			renderer.dispose();
-		}
-
-		if (material) {
-			material.dispose();
-		}
-
-		if (geometry) {
-			geometry.dispose();
-		}
+		cleanupThreeResources(renderer, material, geometry);
 
 		if (mode === 'mouse') {
 			containerElement.removeEventListener('mousemove', handleMouseMove);
@@ -300,9 +289,23 @@
 	}
 </script>
 
-<div class="kaleidoscope-container" bind:this={containerElement}>
-	<!-- The Three.js canvas will be inserted here -->
-</div>
+{#if webglSupported}
+	<div class="kaleidoscope-container" bind:this={containerElement}>
+		<!-- The Three.js canvas will be inserted here -->
+	</div>
+{:else}
+	<div class="webgl-fallback flex h-full w-full items-center justify-center">
+		<div class="fallback-content p-8 text-center">
+			<h3 class="mb-2 text-lg font-semibold">WebGL Not Supported</h3>
+			<p class="text-sm text-gray-600">
+				Your browser doesn't support WebGL, which is required for the kaleidoscope effect.
+			</p>
+			<p class="mt-2 text-xs text-gray-500">
+				Try updating your browser or enabling hardware acceleration.
+			</p>
+		</div>
+	</div>
+{/if}
 
 <style>
 	.kaleidoscope-container {
@@ -310,5 +313,15 @@
 		width: 100%;
 		height: 100%;
 		overflow: hidden;
+	}
+
+	.webgl-fallback {
+		background: linear-gradient(45deg, #f0f4f9, #e8f2ff);
+		border: 2px dashed #cbd5e1;
+		border-radius: 8px;
+	}
+
+	.fallback-content {
+		max-width: 300px;
 	}
 </style>
