@@ -124,62 +124,79 @@
 		class="absolute top-83 left-1/2 z-[100] grid max-w-4xl -translate-x-1/2 transform grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4 rounded-lg border-2 border-primary bg-[var(--bg)] p-4 backdrop-blur-md"
 	>
 		<div class="flex flex-col gap-2">
-			<label for="segments" class="text-sm font-medium text-[var(--fg)]">Segments: {segments}</label
-			>
-			<input
-				type="range"
-				id="segments"
-				bind:value={segments}
-				min="3"
-				max="12"
-				step="1"
-				class="w-full accent-[var(--primary)]"
-			/>
+			<div class="range">
+				<label for="segments" class="text-sm font-medium text-[var(--fg)]"
+					>Segments: {segments}</label
+				>
+				<div class="range__input">
+					<input
+						type="range"
+						id="segments"
+						bind:value={segments}
+						min="3"
+						max="12"
+						step="1"
+						class="w-full"
+					/>
+				</div>
+			</div>
 		</div>
 
 		<div class="flex flex-col gap-2">
-			<label for="scaleFactor" class="text-sm font-medium text-[var(--fg)]"
-				>Scale Factor: {scaleFactor}</label
-			>
-			<input
-				type="range"
-				id="scaleFactor"
-				bind:value={scaleFactor}
-				min="0.5"
-				max="3"
-				step="0.1"
-				class="w-full accent-[var(--primary)]"
-			/>
+			<div class="range">
+				<label for="segments" class="text-sm font-medium text-[var(--fg)]"
+					>Segments: {segments}</label
+				>
+				<div class="range__input">
+					<input
+						type="range"
+						id="scaleFactor"
+						bind:value={scaleFactor}
+						min="0.5"
+						max="3"
+						step="0.1"
+						class="w-full"
+					/>
+				</div>
+			</div>
 		</div>
 
 		<div class="flex flex-col gap-2">
-			<label for="motionFactor" class="text-sm font-medium text-[var(--fg)]"
-				>Motion Factor: {motionFactor}</label
-			>
-			<input
-				type="range"
-				id="motionFactor"
-				bind:value={motionFactor}
-				min="0"
-				max="4"
-				step="0.1"
-				class="w-full accent-[var(--primary)]"
-			/>
+			<div class="range">
+				<label for="motionFactor" class="text-sm font-medium text-[var(--fg)]"
+					>Motion Factor: {motionFactor}</label
+				>
+				<div class="range__input">
+					<input
+						type="range"
+						id="motionFactor"
+						bind:value={motionFactor}
+						min="0"
+						max="4"
+						step="0.1"
+						class="w-full"
+					/>
+				</div>
+			</div>
 		</div>
 
 		<div class="flex flex-col gap-2">
-			<label for="imageAspect" class="text-sm font-medium text-[var(--fg)]"
-				>Image Aspect: {imageAspectControl.toFixed(1)}</label
-			>
-			<input
-				type="range"
-				id="imageAspect"
-				bind:value={imageAspectControl}
-				min="0.5"
-				max="2"
-				step="0.1"
-				class="w-full accent-[var(--primary)]"
-			/>
+			<div class="range">
+				<label for="imageAspect" class="text-sm font-medium text-[var(--fg)]"
+					>Image Aspect: {imageAspectControl.toFixed(1)}</label
+				>
+				<div class="range__input">
+					<input
+						type="range"
+						id="imageAspect"
+						bind:value={imageAspectControl}
+						min="0.5"
+						max="2"
+						step="0.1"
+						class="w-full"
+					/>
+				</div>
+			</div>
 		</div>
 	</div>
 {/if}
