@@ -145,7 +145,7 @@
 		<div class="flex flex-col gap-2">
 			<div class="range">
 				<label for="segments" class="text-sm font-medium text-[var(--fg)]"
-					>Segments: {segments}</label
+					>Scale Factor: {segments}</label
 				>
 				<div class="range__input">
 					<input
