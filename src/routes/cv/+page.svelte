@@ -4,23 +4,15 @@
 
 <script lang="ts">
 	import PageTitle from '$lib/components/PageTitle.svelte';
-	import FileDocument from '$lib/components/icons/FileDocument.svelte';
+	import DownloadButton from '$lib/components/DownloadButton.svelte';
 </script>
 
 <div class="grid grid-cols-6 gap-x-5">
 	<PageTitle title="Curriculum Vitae">
-		<a
-			class="bubble display-font-alt flex items-center gap-2 self-center text-2xl uppercase"
-			target="_blank"
-			rel="noopener"
-			href="ben-rho-des-cv-2025.pdf"
-		>
-			<FileDocument size={24} />
-			Download pdf
-		</a>
+		<DownloadButton href="ben-rho-des-cv-2025.pdf" label="Download pdf" />
 	</PageTitle>
 
-	<section class="col-span-6">
+	<section class="col-span-6 lg:col-span-6">
 		<h2 class="mb-4 text-2xl font-semibold text-primary">About</h2>
 		<p class="mb-4 text-lg text-secondary">
 			Seeking my next opportunity as a full stack developer in a remote or hybrid role (1-2 days on
@@ -48,7 +40,7 @@
 		<div class="mb-8 h-px bg-secondary opacity-25"></div>
 	</section>
 
-	<section class="col-span-3">
+	<section class="col-span-3 col-span-6 lg:col-span-3">
 		<h2 class="mb-6 text-2xl font-semibold text-primary">Work Experience</h2>
 
 		<article class="mb-8">
@@ -169,7 +161,7 @@
 		</article>
 	</section>
 
-	<aside class="col-span-3">
+	<aside class="col-span-3 col-span-6 lg:col-span-3">
 		<h2 class="mb-6 text-2xl font-semibold text-primary">Education & Certs</h2>
 		<ul class="mb-4 space-y-2">
 			<li>AWS Associate Developer (2020)</li>

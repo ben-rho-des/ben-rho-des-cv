@@ -12,7 +12,10 @@
 
 <Header />
 <ErrorBoundary>
-	<main class="mx-auto min-h-[80vh] w-full max-w-[1400px] pt-20" class:container={!isHomePage}>
+	<main
+		class="mx-auto min-h-[80vh] w-full max-w-[1400px] pt-16 pt-20 lg:pt-20"
+		class:container={!isHomePage}
+	>
 		{#if $modeStore.grid}
 			<Grid />
 		{/if}

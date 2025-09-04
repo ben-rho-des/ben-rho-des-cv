@@ -9,7 +9,7 @@
 <div class="grid grid-cols-6 gap-x-5">
 	<PageTitle title="About 🥸" />
 
-	<div class="col-span-4">
+	<div class="col-span-4 col-span-6 lg:col-span-4">
 		<p>Hey, I'm Ben 👋</p>
 		<p>
 			I'm a full-stack developer who loves building things that actually make a difference. Right

@@ -95,10 +95,16 @@
 <header class="header" class:scrolled={isScrolled} bind:this={header}>
 	<div class="header-inner container">
 		<a class="logo" href="." aria-label="Go to homepage">
-			<img src={$modeStore.theme === THEMES.DARK ? 'brd-dark.svg' : 'brd.svg'} alt="Ben Logo" />
+			<img
+				src={$modeStore.theme === THEMES.DARK ? 'brd-dark.svg' : 'brd.svg'}
+				alt="Ben Logo"
+				class="h-14"
+			/>
 		</a>
 
-		<h2 class="header-title w-400">Melbourne Based Fullstack Developer</h2>
+		<h2 class="header-title w-400 max-w-[200px] lg:max-w-none">
+			Melbourne Based Fullstack Developer
+		</h2>
 
 		<div class="header-actions">
 			<button class="action-btn" on:click={toggleTheme} aria-label="Toggle theme">
@@ -222,7 +228,7 @@
 	}
 
 	.logo img {
-		height: clamp(36px, 5vw, 56px);
+		height: clamp(42px, 5vw, 56px);
 		width: auto;
 		transition: filter 0.2s ease;
 	}

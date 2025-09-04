@@ -104,11 +104,14 @@
 </div>
 
 <div class="relative z-10 flex flex-col items-center justify-center">
-	<h1 class="hero-font display-font text-20xl text-center uppercase" data-text={selectedTitle}>
+	<h1
+		class="hero-font display-font lgtext-20xl text-center text-8xl uppercase"
+		data-text={selectedTitle}
+	>
 		{selectedTitle}
 	</h1>
 	<div
-		class="display-font-alt bubble flex items-center justify-center gap-2 text-center text-3xl uppercase"
+		class="display-font-alt bubble flex !min-w-[150px] items-center justify-center gap-2 !p-6 text-center text-3xl text-xl uppercase lg:!min-w-[200px] lg:!p-10 lg:text-3xl"
 	>
 		gl+hf
 	</div>

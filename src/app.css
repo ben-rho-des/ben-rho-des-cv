@@ -184,6 +184,13 @@ body {
 	line-height: 230px;
 }
 
+@media (min-width: 1024px) {
+	.lgtext-20xl.lgtext-20xl {
+		font-size: var(--font-size-20xl);
+		line-height: 230px;
+	}
+}
+
 .display-font {
 	font-family: var(--display-font);
 	font-weight: 900;
@@ -352,5 +359,3 @@ a:focus {
 .col-start-6 {
 	grid-column-start: 6;
 }
-
-/* Main element styling */
