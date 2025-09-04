@@ -160,9 +160,7 @@
 
 		// Create material with shaders
 		material = new THREE.ShaderMaterial({
-			// extensions: {
-			// 	derivatives: '#extension GL_OES_standard_derivatives : enable'
-			// },
+
 			side: THREE.DoubleSide,
 			uniforms: {
 				resolution: { value: new THREE.Vector4() },
@@ -245,11 +243,6 @@
 		const height = containerElement.offsetHeight;
 
 		renderer.setSize(width, height);
-		// Update orthographic camera bounds
-		camera.left = -width / height / 2;
-		camera.right = width / height / 2;
-		camera.top = 0.5;
-		camera.bottom = -0.5;
 		camera.updateProjectionMatrix();
 
 		// Calculate aspect ratio for shader

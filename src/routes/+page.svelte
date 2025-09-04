@@ -2,7 +2,6 @@
 	import Kaleidoscope from '$lib/components/Kaleidoscope.svelte';
 	import { onMount, onDestroy } from 'svelte';
 	import { browser } from '$app/environment';
-	import { modeStore } from '$lib/stores/mode';
 	import { tweened } from 'svelte/motion';
 
 	// Configuration
@@ -50,9 +49,6 @@
 	onMount(() => {
 		if (browser) {
 			document.addEventListener('keydown', handleKeyPress);
-			// Automatically enable grid mode for kaleidoscope
-			modeStore.setGrid(true);
-
 			// Start the imageAspect animation loop
 			startImageAspectAnimation();
 		}
@@ -75,8 +71,6 @@
 	onDestroy(() => {
 		if (browser) {
 			document.removeEventListener('keydown', handleKeyPress);
-			// Clean up grid mode when leaving kaleidoscope
-			modeStore.setGrid(false);
 		}
 	});
 </script>
@@ -85,13 +79,7 @@
 	<title>Ben-rho-des cv website</title>
 </svelte:head>
 
-<div class="flex flex-col items-center justify-center">
-	<h1 class="hero-font display-font text-20xl text-center uppercase" data-text={selectedTitle}>
-		{selectedTitle}
-	</h1>
-	<div class="display-font-alt bubble text-center text-3xl uppercase">gl+hf</div>
-</div>
-<div class="fixed top-0 left-0 -z-10 m-0 h-screen w-screen overflow-hidden p-0 font-sans">
+<div class="fixed top-0 left-0 z-0 m-0 h-screen w-screen overflow-hidden p-0 font-sans">
 	<div class="relative h-screen w-screen overflow-hidden">
 		<Kaleidoscope
 			{imageSrc}
@@ -103,6 +91,13 @@
 			imageAspect={$imageAspect}
 		/>
 	</div>
+</div>
+
+<div class="relative z-10 flex flex-col items-center justify-center">
+	<h1 class="hero-font display-font text-20xl text-center uppercase" data-text={selectedTitle}>
+		{selectedTitle}
+	</h1>
+	<div class="display-font-alt bubble text-center text-3xl uppercase">gl+hf</div>
 </div>
 {#if showControls}
 	<div
