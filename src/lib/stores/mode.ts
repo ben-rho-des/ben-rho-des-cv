@@ -8,7 +8,6 @@ interface ModeState {
 	grid: boolean;
 }
 
-// Initialize with default values
 const initialState: ModeState = {
 	theme: '🌞',
 	grid: false
@@ -20,7 +19,6 @@ function createModeStore() {
 	return {
 		subscribe,
 
-		// Initialize from localStorage and apply to body
 		init: () => {
 			if (!browser) return;
 
@@ -36,7 +34,6 @@ function createModeStore() {
 			applyToBody(state);
 		},
 
-		// Toggle theme between light and dark
 		toggleTheme: () => {
 			update((state) => {
 				const newTheme: Mode = state.theme === '🌞' ? '🌚' : '🌞';
@@ -51,7 +48,6 @@ function createModeStore() {
 			});
 		},
 
-		// Toggle grid mode
 		toggleGrid: () => {
 			update((state) => {
 				const newGrid = !state.grid;
@@ -66,7 +62,6 @@ function createModeStore() {
 			});
 		},
 
-		// Set grid mode explicitly (for route-based activation)
 		setGrid: (enabled: boolean) => {
 			update((state) => {
 				const newState = { ...state, grid: enabled };
@@ -79,7 +74,6 @@ function createModeStore() {
 			});
 		},
 
-		// Apply current state to body classes
 		applyCurrent: () => {
 			if (!browser) return;
 
@@ -90,24 +84,18 @@ function createModeStore() {
 	};
 }
 
-// Apply mode state to body classes
 function applyToBody(state: ModeState) {
 	if (!browser) return;
 
 	const body = document.body;
 
-	// Remove all mode classes
 	body.classList.remove('mode-🌞', 'mode-🌚', 'mode-🫥', 'dark');
-
-	// Add current theme
 	body.classList.add(`mode-${state.theme}`);
 
-	// Add dark class for Tailwind dark mode when in dark theme
 	if (state.theme === '🌚') {
 		body.classList.add('mode-🌚');
 	}
 
-	// Add grid mode if enabled
 	if (state.grid) {
 		body.classList.add('mode-🫥');
 	}

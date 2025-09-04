@@ -4,7 +4,6 @@
 	import { browser } from '$app/environment';
 	import { tweened } from 'svelte/motion';
 
-	// Configuration
 	const titleOptions = [
 		'end times thin hope',
 		'singularity inevitable',
@@ -30,13 +29,11 @@
 	let opacity = 1;
 	let showControls = false;
 
-	// Animated imageAspect that grows and shrinks
 	const imageAspect = tweened(0.5, {
 		duration: 13000,
 		easing: (t) => 0.5 * (1 + Math.sin(t * Math.PI))
 	});
 
-	// Random selection variables - initialize immediately
 	let selectedTitle = titleOptions[Math.floor(Math.random() * titleOptions.length)];
 	let imageSrc = imageOptions[Math.floor(Math.random() * imageOptions.length)];
 
@@ -49,22 +46,18 @@
 	onMount(() => {
 		if (browser) {
 			document.addEventListener('keydown', handleKeyPress);
-			// Start the imageAspect animation loop
 			startImageAspectAnimation();
 		}
 	});
 
 	function startImageAspectAnimation() {
 		const animate = () => {
-			// Start from 0.5 and animate to 1.5
 			imageAspect.set(1.5, { duration: 13000 });
 			setTimeout(() => {
-				// Then animate back to 0.5
 				imageAspect.set(0.5, { duration: 13000 });
 				setTimeout(animate, 13000);
 			}, 13000);
 		};
-		// Start the animation after a small delay to ensure smooth start
 		setTimeout(animate, 100);
 	}
 

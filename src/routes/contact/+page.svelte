@@ -2,7 +2,6 @@
 	import PageTitle from '$lib/components/PageTitle.svelte';
 	import { onMount } from 'svelte';
 
-	// Form state
 	let formData = {
 		name: '',
 		email: '',
@@ -14,19 +13,13 @@
 	let submitStatus: 'idle' | 'success' | 'error' = 'idle';
 	let statusMessage = '';
 
-	// Environment configuration
-	// TODO: Replace with your actual Formspree endpoint
 	const FORMSPREE_ENDPOINT = 'https://formspree.io/f/REPLACE_ME';
-
-	// TODO: Set BUILD_TARGET="netlify" in your environment to enable Netlify Forms instead
 	const BUILD_TARGET = import.meta.env.VITE_BUILD_TARGET || 'formspree';
 
 	async function handleSubmit(event: Event) {
 		event.preventDefault();
 
-		// Honeypot check
 		if (formData.website) {
-			console.log('Honeypot triggered, ignoring submission');
 			return;
 		}
 
@@ -36,12 +29,10 @@
 
 		try {
 			if (BUILD_TARGET === 'netlify') {
-				// Netlify Forms handling
 				const form = event.target as HTMLFormElement;
 				const formDataObj = new FormData(form);
 				formDataObj.append('form-name', 'contact');
 
-				// Submit to Netlify
 				const response = await fetch('/', {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -59,7 +50,6 @@
 					throw new Error('Submission failed');
 				}
 			} else {
-				// Formspree handling
 				const response = await fetch(FORMSPREE_ENDPOINT, {
 					method: 'POST',
 					headers: {
@@ -91,7 +81,6 @@
 		}
 	}
 
-	// Reset form on page load
 	onMount(() => {
 		formData = { name: '', email: '', message: '', website: '' };
 	});

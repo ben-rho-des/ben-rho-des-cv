@@ -6,7 +6,6 @@
 	import Grid from '$lib/components/Grid.svelte';
 	import { modeStore } from '$lib/stores/mode';
 
-	// Check if we're on the home page (handle both local dev and GitHub Pages)
 	$: isHomePage = $page.url.pathname === '/' || $page.url.pathname === '/ben-rho-des-cv/';
 </script>
 

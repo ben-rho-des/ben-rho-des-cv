@@ -7,14 +7,11 @@
 	const right = [
 		{ href: 'cv', label: 'Curriculum Vitae' },
 		{ href: 'about', label: 'About' }
-		// { href: 'blog',    label: 'Blog'    },
-		// { href: 'contact', label: 'Contact' }
 	];
 
 	const currentPath = derived(page, ($p) => $p.url.pathname);
 	const isActive = (path: string, current: string) => {
 		if (typeof current !== 'string') return false;
-		// Handle relative paths by removing leading slash and comparing
 		const normalizedPath = path.startsWith('/') ? path.slice(1) : path;
 		const normalizedCurrent = current.startsWith('/') ? current.slice(1) : current;
 		return normalizedCurrent === normalizedPath || normalizedCurrent === `/${normalizedPath}`;
@@ -41,17 +38,14 @@
 	}
 
 	onMount(() => {
-		// Initialize mode store
 		modeStore.init();
 
-		// Simple scroll event listener
 		const scrollHandler = () => {
 			const scrollY =
 				window.scrollY || document.documentElement.scrollTop || document.body.scrollTop;
 			isScrolled = scrollY > 10;
 		};
 
-		// Add scroll listener to multiple targets to ensure we catch it
 		window.addEventListener('scroll', scrollHandler, { passive: true, capture: true });
 		document.addEventListener('scroll', scrollHandler, { passive: true, capture: true });
 		document.documentElement.addEventListener('scroll', scrollHandler, {
@@ -60,7 +54,6 @@
 		});
 		document.body.addEventListener('scroll', scrollHandler, { passive: true, capture: true });
 
-		// Test initial scroll position
 		scrollHandler();
 
 		return () => {

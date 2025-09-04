@@ -3,14 +3,13 @@
 	import { browser } from '$app/environment';
 	import * as THREE from 'three';
 
-	// Props for customization
 	export let imageSrc = '';
-	export let segments = 6; // Number of kaleidoscope segments
-	export let mode = 'static'; // 'static', 'loop', 'mouse', 'scroll'
+	export let segments = 6;
+	export let mode = 'static';
 	export let scaleFactor = 1;
 	export let motionFactor = 1;
 	export let opacity = 1;
-	export let imageAspect = 1; // Image aspect ratio (width/height)
+	export let imageAspect = 1;
 
 	let containerElement: HTMLElement;
 	let scene: THREE.Scene;
@@ -24,7 +23,6 @@
 	let lastTime = performance.now() / 1000;
 	let animationId: number;
 
-	// Vertex shader - handles vertex positions
 	const vertexShader = `
 		varying vec2 vUv;
 		
@@ -34,7 +32,6 @@
 		}
 	`;
 
-	// Fragment shader - creates the kaleidoscope effect
 	const fragmentShader = `
 		precision mediump float;
 		
@@ -53,7 +50,6 @@
 		
 		const float PI = 3.14159265359;
 		
-		// Adjust UV coordinates with offset and rotation
 		vec2 adjustUV(vec2 uv, vec2 offset, float rotation) {
 			vec2 uvOffset = uv + offset * uOffsetAmount;
 			float cosRot = cos(rotation * uRotationAmount);
@@ -63,35 +59,27 @@
 		}
 		
 		void main() {
-			// Normalize UV coordinates
 			vec2 newUV = (vUv - vec2(0.5)) * resolution.zw + vec2(0.5);
 			vec2 uv = newUV * 2.0 - 1.0;
 			
-			// Calculate angle and radius from center
 			float angle = atan(uv.y, uv.x);
 			float radius = length(uv);
 			
-			// Create kaleidoscope segments
 			float segment = PI * 2.0 / segments;
 			angle = mod(angle, segment);
 			angle = segment - abs(segment / 2.0 - angle);
 			
-			// Convert back to UV coordinates
 			uv = radius * vec2(cos(angle), sin(angle));
 			
-			// Apply scaling and adjustments
 			float scale = 1.0 / uScaleFactor;
 			vec2 adjustedUV = adjustUV(uv * scale + scale, uOffset, uRotation);
 			
-			// Correct for image aspect ratio
 			vec2 aspectCorrectedUV = vec2(adjustedUV.x, adjustedUV.y * uImageAspect);
 			
-			// Create tiling pattern with mirroring
 			vec2 tileIndex = floor(aspectCorrectedUV);
 			vec2 oddTile = mod(tileIndex, 2.0);
 			vec2 mirroredUV = mix(fract(aspectCorrectedUV), 1.0 - fract(aspectCorrectedUV), oddTile);
 			
-			// Sample texture and apply opacity
 			vec4 color = texture2D(uTexture, mirroredUV);
 			color.a *= uOpacity;
 			
@@ -114,22 +102,17 @@
 	});
 
 	function initThreeJS() {
-		// Create scene
 		scene = new THREE.Scene();
 
-		// Create camera (orthographic for 2D effect)
 		camera = new THREE.OrthographicCamera(-0.5, 0.5, 0.5, -0.5, -1000, 1000);
 		camera.position.set(0, 0, 2);
 
-		// Create renderer
 		renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 		renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 		renderer.setSize(containerElement.offsetWidth, containerElement.offsetHeight);
 		renderer.setClearColor(0xeeeeee, 1);
-		// renderer.physicallyCorrectLights = true; // Not available in this Three.js version
 		renderer.outputColorSpace = THREE.SRGBColorSpace;
 
-		// Position renderer
 		renderer.domElement.style.position = 'absolute';
 		renderer.domElement.style.top = '0';
 		renderer.domElement.style.left = '0';
@@ -138,29 +121,22 @@
 		// eslint-disable-next-line svelte/no-dom-manipulating
 		containerElement.appendChild(renderer.domElement);
 
-		// Load texture with error handling
 		const textureLoader = new THREE.TextureLoader();
 		const texture = textureLoader.load(
 			imageSrc,
-			// onLoad callback
 			(texture: THREE.Texture) => {
-				console.log('Texture loaded successfully');
 				texture.minFilter = THREE.LinearFilter;
 				texture.generateMipmaps = false;
 				texture.wrapS = THREE.RepeatWrapping;
 				texture.wrapT = THREE.RepeatWrapping;
 			},
-			// onProgress callback
 			undefined,
-			// onError callback
 			(error: unknown) => {
 				console.error('Error loading texture:', error);
 			}
 		);
 
-		// Create material with shaders
 		material = new THREE.ShaderMaterial({
-
 			side: THREE.DoubleSide,
 			uniforms: {
 				resolution: { value: new THREE.Vector4() },
@@ -179,20 +155,10 @@
 			transparent: true
 		});
 
-		// Create geometry and mesh
 		geometry = new THREE.PlaneGeometry(1, 1, 1, 1);
 		plane = new THREE.Mesh(geometry, material);
 		scene.add(plane);
 
-		console.log('Three.js scene initialized');
-		console.log(
-			'Container dimensions:',
-			containerElement.offsetWidth,
-			containerElement.offsetHeight
-		);
-		console.log('Image source:', imageSrc);
-
-		// Initial resize
 		handleResize();
 	}
 
@@ -245,7 +211,6 @@
 		renderer.setSize(width, height);
 		camera.updateProjectionMatrix();
 
-		// Calculate aspect ratio for shader
 		let aspectX, aspectY;
 		if (height / width > 1) {
 			aspectX = (width / height) * 1;
@@ -255,7 +220,6 @@
 			aspectY = height / width / 1;
 		}
 
-		// Update shader uniforms
 		material.uniforms.resolution.value.x = width;
 		material.uniforms.resolution.value.y = height;
 		material.uniforms.resolution.value.z = aspectX;
@@ -266,7 +230,6 @@
 		time /= 1000;
 
 		if (mode === 'mouse') {
-			// Mouse-based rotation and offset
 			const offsetX = 2 * (mouse.x - 0.5) * motionFactor;
 			const offsetY = 2 * (mouse.y - 0.5) * motionFactor;
 			material.uniforms.uOffset.value.set(offsetX, offsetY);
@@ -274,7 +237,6 @@
 			const rotation = Math.PI * (mouse.y - 0.5) * 2 * motionFactor;
 			material.uniforms.uRotation.value = rotation;
 		} else if (mode === 'loop') {
-			// Continuous rotation
 			const deltaTime = time - lastTime;
 			const rotationSpeed = 0.1;
 			material.uniforms.uRotation.value += rotationSpeed * motionFactor * deltaTime;
@@ -286,12 +248,10 @@
 		function render(time = 0) {
 			if (isPlaying && renderer && scene && camera) {
 				try {
-					// Update animations for mouse and loop modes
 					if (mode === 'mouse' || mode === 'loop') {
 						updateDataTexture(time);
 					}
 
-					// Render the scene
 					renderer.render(scene, camera);
 					animationId = requestAnimationFrame(render);
 				} catch (error) {
@@ -320,7 +280,6 @@
 			geometry.dispose();
 		}
 
-		// Remove event listeners
 		if (mode === 'mouse') {
 			containerElement.removeEventListener('mousemove', handleMouseMove);
 			containerElement.removeEventListener('touchmove', handleTouchMove);
@@ -333,7 +292,6 @@
 		window.removeEventListener('resize', handleResize);
 	}
 
-	// Reactive updates
 	$: if (material) {
 		material.uniforms.segments.value = segments;
 		material.uniforms.uScaleFactor.value = scaleFactor;
