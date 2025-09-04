@@ -29,6 +29,18 @@
 	let motionFactor = $state(DEFAULTS.MOTION_FACTOR);
 	let showControls = $state(false);
 
+	// Debug: Log state changes
+	$effect(() => {
+		if (browser) {
+			console.log('Homepage state changed:', {
+				segments,
+				scaleFactor,
+				motionFactor,
+				imageAspectControl
+			});
+		}
+	});
+
 	const imageAspect = tweened(0.5, {
 		duration: getReducedMotionDuration(ANIMATION_DURATIONS.IMAGE_ASPECT_CYCLE),
 		easing: (t) => 0.5 * (1 + Math.sin(t * Math.PI))

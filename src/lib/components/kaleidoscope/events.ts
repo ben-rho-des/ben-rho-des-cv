@@ -4,7 +4,7 @@ import type { ShaderMaterial } from 'three';
 export function createMouseHandler(
 	containerElement: HTMLElement,
 	material: ShaderMaterial,
-	motionFactor: number
+	getMotionFactor: () => number
 ) {
 	const mouse = { x: 0, y: 0 };
 
@@ -25,6 +25,7 @@ export function createMouseHandler(
 	}
 
 	function updateUniforms() {
+		const motionFactor = getMotionFactor();
 		const offsetX = 2 * (mouse.x - 0.5) * motionFactor;
 		const offsetY = 2 * (mouse.y - 0.5) * motionFactor;
 		material.uniforms.uOffset.value.set(offsetX, offsetY);
@@ -50,7 +51,7 @@ export function createMouseHandler(
 export function createScrollHandler(
 	containerElement: HTMLElement,
 	material: ShaderMaterial,
-	motionFactor: number
+	getMotionFactor: () => number
 ) {
 	function handleScroll() {
 		const rect = containerElement.getBoundingClientRect();
@@ -61,6 +62,7 @@ export function createScrollHandler(
 			const totalHeight = window.innerHeight + containerElement.offsetHeight;
 			const scrollProgress = (window.innerHeight - top) / totalHeight;
 			const maxRotation = 2 * Math.PI;
+			const motionFactor = getMotionFactor();
 			material.uniforms.uRotation.value = scrollProgress * maxRotation * motionFactor;
 		}
 	}

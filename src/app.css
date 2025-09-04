@@ -363,3 +363,51 @@ a:focus {
 body.mode-🫥 .fixed:before {
 	background: none;
 }
+
+[type='range'] {
+	-webkit-appearance: none;
+	appearance: none;
+	background-color: transparent;
+	border-radius: 1px;
+	cursor: pointer;
+	inline-size: 12.5rem;
+}
+
+[type='range']::-webkit-slider-runnable-track {
+	height: 0.5rem;
+	background-color: var(--fg);
+	border-radius: calc(var(--base-border-radius, 20px) / 2);
+}
+
+[type='range']::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	appearance: none;
+	width: 1rem;
+	height: 1rem;
+	background-color: var(--primary);
+	border-radius: 50%;
+	margin-top: calc(calc(0.5rem / 2) - calc(1rem / 2));
+}
+
+[type='range']::-moz-range-thumb {
+	-webkit-appearance: none;
+	appearance: none;
+	width: 1rem;
+	height: 1rem;
+	background-color: var(--primary);
+	border-radius: 50%;
+	margin-top: calc(calc(0.75rem / 2) - calc(1rem / 2));
+	border: none;
+}
+
+[type='range']:focus {
+	outline: none;
+}
+
+[type='range']:focus::-webkit-slider-thumb {
+	background-color: var(--primary-muted);
+}
+
+[type='range']:focus::-moz-range-thumb {
+	background-color: var(--primary-muted);
+}

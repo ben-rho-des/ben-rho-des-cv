@@ -61,14 +61,6 @@
 					initThreeJS();
 					setupEventHandlers();
 					startRenderLoop();
-
-					// Update uniforms with current prop values after initialization
-					if (material) {
-						material.uniforms.segments.value = segments;
-						material.uniforms.uScaleFactor.value = scaleFactor;
-						material.uniforms.uOpacity.value = opacity;
-						material.uniforms.uImageAspect.value = imageAspect;
-					}
 				});
 			}
 		}
@@ -131,18 +123,27 @@
 		if (!containerElement) return;
 
 		if (mode === 'mouse') {
-			mouseHandler = createMouseHandler(containerElement, material, motionFactor);
+			mouseHandler = createMouseHandler(containerElement, material, () => motionFactor);
 		}
 
 		if (mode === 'scroll') {
-			scrollHandler = createScrollHandler(containerElement, material, motionFactor);
+			scrollHandler = createScrollHandler(containerElement, material, () => motionFactor);
 		}
 
 		resizeHandler = createResizeHandler(containerElement, renderer, camera, material);
 	}
 
 	function startRenderLoop() {
-		renderLoop = createRenderLoop(renderer, scene, camera, material, mode, motionFactor);
+		renderLoop = createRenderLoop(
+			renderer,
+			scene,
+			camera,
+			material,
+			mode,
+			() => motionFactor,
+			mouseHandler,
+			() => ({ segments, scaleFactor, imageAspect, opacity })
+		);
 	}
 
 	function cleanup(): void {
@@ -156,18 +157,7 @@
 		cleanupThreeResources(renderer, material, geometry);
 	}
 
-	// Effect to update uniforms when props change or material becomes available
-	$effect(() => {
-		if (material) {
-			material.uniforms.segments.value = segments;
-			material.uniforms.uScaleFactor.value = scaleFactor;
-			material.uniforms.uOpacity.value = opacity;
-			material.uniforms.uImageAspect.value = imageAspect;
-			// motionFactor is used in updateDataTexture function, so we don't need to set it here
-			// but we need to include it in the effect dependencies
-			void motionFactor; // This ensures the effect re-runs when motionFactor changes
-		}
-	});
+	// Uniforms are now updated in the render loop for better performance and reliability
 </script>
 
 {#if webglSupported}

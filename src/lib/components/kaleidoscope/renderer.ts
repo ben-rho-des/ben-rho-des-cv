@@ -7,7 +7,14 @@ export function createRenderLoop(
 	camera: import('three').OrthographicCamera,
 	material: ShaderMaterial,
 	mode: 'static' | 'loop' | 'mouse' | 'scroll',
-	motionFactor: number
+	getMotionFactor: () => number,
+	mouseHandler?: { updateUniforms: () => void } | null,
+	getUniforms?: () => {
+		segments: number;
+		scaleFactor: number;
+		imageAspect: number;
+		opacity: number;
+	} | null
 ) {
 	let isPlaying = true;
 	let lastTime = performance.now() / 1000;
@@ -18,10 +25,12 @@ export function createRenderLoop(
 
 		if (mode === 'mouse') {
 			// Mouse updates are handled by the mouse handler
+			mouseHandler?.updateUniforms();
 			return;
 		} else if (mode === 'loop') {
 			const deltaTime = time - lastTime;
 			const rotationSpeed = 0.1;
+			const motionFactor = getMotionFactor();
 			material.uniforms.uRotation.value += rotationSpeed * motionFactor * deltaTime;
 			lastTime = time;
 		}
@@ -30,6 +39,17 @@ export function createRenderLoop(
 	function render(time = 0) {
 		if (isPlaying && renderer && scene && camera) {
 			try {
+				// Update uniforms from props on every frame
+				if (getUniforms) {
+					const uniforms = getUniforms();
+					if (uniforms) {
+						material.uniforms.segments.value = uniforms.segments;
+						material.uniforms.uScaleFactor.value = uniforms.scaleFactor;
+						material.uniforms.uImageAspect.value = uniforms.imageAspect;
+						material.uniforms.uOpacity.value = uniforms.opacity;
+					}
+				}
+
 				if (mode === 'mouse' || mode === 'loop') {
 					updateDataTexture(time);
 				}
